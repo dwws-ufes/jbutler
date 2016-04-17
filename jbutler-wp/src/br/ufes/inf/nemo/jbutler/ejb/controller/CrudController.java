@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
 
+import br.ufes.inf.nemo.jbutler.ReflectionUtil;
 import br.ufes.inf.nemo.jbutler.ejb.application.CrudException;
 import br.ufes.inf.nemo.jbutler.ejb.application.CrudService;
 import br.ufes.inf.nemo.jbutler.ejb.application.CrudValidationError;
@@ -89,12 +90,22 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	}
 
 	/**
-	 * Method called by the constructor to initialize the entity and any auxiliary properties. Must be overridden by
-	 * subclasses to implement this behavior.
+	 * Method called by the constructor to initialize the entity. Could be overridden by subclasses to also initialize
+	 * auxiliary objects.
 	 * 
-	 * @return A blank new entity belonging to the managing class.
+	 * @return A blank new entity belonging to the entity class.
 	 */
-	protected abstract T createNewEntity();
+	@SuppressWarnings("unchecked")
+	protected T createNewEntity() {
+		Class<T> clazz = (Class<T>) ReflectionUtil.determineTypeArgument(getClass());
+		try {
+			return clazz.newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e) {
+			logger.log(Level.SEVERE, "Could not automatically create a new instance of the domain entity inferred from the generic type parameters.", e);
+			return null;
+		}
+	}
 
 	/**
 	 * Method called by the retrieve and update scenarios to check if all is OK with the retrieved entity. This method

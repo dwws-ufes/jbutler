@@ -3,6 +3,7 @@ package br.ufes.inf.nemo.jbutler.ejb.application;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import br.ufes.inf.nemo.jbutler.ReflectionUtil;
 import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
 
 /**
@@ -38,7 +39,17 @@ public abstract class CrudServiceBean<T extends PersistentObject> extends Listin
 	 * 
 	 * @return An empty entity.
 	 */
-	protected abstract T createNewEntity();
+	@SuppressWarnings("unchecked")
+	protected T createNewEntity() {
+		Class<T> clazz = (Class<T>)ReflectionUtil.determineTypeArgument(getClass());
+		try {
+			return clazz.newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e) {
+			logger.log(Level.SEVERE, "Could not automatically create a new instance of the domain entity inferred from the generic type parameters.", e);
+			return null;
+		}
+	}
 
 	/**
 	 * Callback method that allows subclasses to intercept the moment exactly before the persisting (creating or

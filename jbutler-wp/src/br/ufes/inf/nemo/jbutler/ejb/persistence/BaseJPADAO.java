@@ -31,6 +31,7 @@ import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.Type;
 
+import br.ufes.inf.nemo.jbutler.ReflectionUtil;
 import br.ufes.inf.nemo.jbutler.ejb.application.filters.Criterion;
 import br.ufes.inf.nemo.jbutler.ejb.application.filters.CriterionType;
 import br.ufes.inf.nemo.jbutler.ejb.application.filters.Filter;
@@ -72,6 +73,18 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 * @see javax.persistence.PersistenceContext
 	 */
 	protected abstract EntityManager getEntityManager();
+
+	/**
+	 * Returns the class that is managed by the DAO. This information is needed for some persistence operations and the
+	 * method is made public because other classes that use the DAOs in a generic way could benefit from knowing the
+	 * class that is managed by it.
+	 * 
+	 * @return A class object that represents the class managed by the DAO.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Class<T> getDomainClass() {
+		return (Class<T>)ReflectionUtil.determineTypeArgument(getClass());
+	}
 
 	/**
 	 * Method that can be overriden by the subclasses to determine the default ordering when using retrieveAll and

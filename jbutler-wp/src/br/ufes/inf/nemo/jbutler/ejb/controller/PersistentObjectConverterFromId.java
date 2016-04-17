@@ -8,6 +8,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
+import br.ufes.inf.nemo.jbutler.ReflectionUtil;
 import br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO;
 import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
 
@@ -43,9 +44,10 @@ public class PersistentObjectConverterFromId<T extends PersistentObject> impleme
 	 * @param dao
 	 *            The DAO used to retrieve objects given their IDs.
 	 */
+	@SuppressWarnings("unchecked")
 	public PersistentObjectConverterFromId(BaseDAO<T> dao) {
 		this.dao = dao;
-		persistentClass = dao.getDomainClass();
+		persistentClass = (Class<T>) ReflectionUtil.determineTypeArgument(dao.getClass());
 	}
 
 	/**
