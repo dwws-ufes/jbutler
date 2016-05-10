@@ -32,18 +32,25 @@ public abstract class CrudServiceBean<T extends PersistentObject> extends Listin
 
 	/** The logger. */
 	private static final Logger logger = Logger.getLogger(CrudServiceBean.class.getCanonicalName());
+	
+	/** The domain class. */
+	private Class<T> domainClass;
 
+	/** Constructor. */
+	@SuppressWarnings("unchecked")
+	public CrudServiceBean() {
+		domainClass = (Class<T>)ReflectionUtil.determineTypeArgument(getClass());
+	}
+	
 	/**
 	 * Creates an empty entity to be stored. As this is class-specific, this method must be overridden by the
 	 * subclasses.
 	 * 
 	 * @return An empty entity.
 	 */
-	@SuppressWarnings("unchecked")
 	protected T createNewEntity() {
-		Class<T> clazz = (Class<T>)ReflectionUtil.determineTypeArgument(getClass());
 		try {
-			return clazz.newInstance();
+			return domainClass.newInstance();
 		}
 		catch (InstantiationException | IllegalAccessException e) {
 			logger.log(Level.SEVERE, "Could not automatically create a new instance of the domain entity inferred from the generic type parameters.", e);

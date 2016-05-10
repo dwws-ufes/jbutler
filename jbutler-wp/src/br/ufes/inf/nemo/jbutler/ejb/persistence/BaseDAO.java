@@ -28,6 +28,15 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.exceptions.PersistentObjectNotFo
  */
 public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	/**
+	 * Returns the class that is managed by the DAO. This information is needed for some persistence operations and the
+	 * method is made public because other classes that use the DAOs in a generic way could benefit from knowing the
+	 * class that is managed by it.
+	 * 
+	 * @return A class object that represents the class managed by the DAO.
+	 */
+	public Class<T> getDomainClass();
+	
+	/**
 	 * Returns the number of persistent objects of this class.
 	 * 
 	 * @return Number of existing persistent objects of this class.

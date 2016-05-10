@@ -63,6 +63,15 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 
 	/** The logger. */
 	private static final Logger logger = Logger.getLogger(BaseJPADAO.class.getCanonicalName());
+	
+	/** The domain class. */
+	private Class<T> domainClass;
+	
+	/** Constructor. */
+	@SuppressWarnings("unchecked")
+	public BaseJPADAO() {
+		domainClass = (Class<T>)ReflectionUtil.determineTypeArgument(getClass());
+	}
 
 	/**
 	 * Abstract method that should be implemented by the concrete DAOs returning the entity manager that is used in the
@@ -74,16 +83,9 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 */
 	protected abstract EntityManager getEntityManager();
 
-	/**
-	 * Returns the class that is managed by the DAO. This information is needed for some persistence operations and the
-	 * method is made public because other classes that use the DAOs in a generic way could benefit from knowing the
-	 * class that is managed by it.
-	 * 
-	 * @return A class object that represents the class managed by the DAO.
-	 */
-	@SuppressWarnings("unchecked")
-	protected Class<T> getDomainClass() {
-		return (Class<T>)ReflectionUtil.determineTypeArgument(getClass());
+	/** @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#getDomainClass() */
+	public Class<T> getDomainClass() {
+		return domainClass;
 	}
 
 	/**

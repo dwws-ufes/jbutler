@@ -45,6 +45,15 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 
 	/** Output: the list of entities to delete. */
 	protected SortedSet<T> trashCan = new TreeSet<T>();
+	
+	/** The domain class. */
+	private Class<T> domainClass;
+	
+	/** Constructor. */
+	@SuppressWarnings("unchecked")
+	public CrudController() {
+		domainClass = (Class<T>) ReflectionUtil.determineTypeArgument(getClass());
+	}
 
 	/**
 	 * Getter for readOnly.
@@ -95,11 +104,9 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	 * 
 	 * @return A blank new entity belonging to the entity class.
 	 */
-	@SuppressWarnings("unchecked")
 	protected T createNewEntity() {
-		Class<T> clazz = (Class<T>) ReflectionUtil.determineTypeArgument(getClass());
 		try {
-			return clazz.newInstance();
+			return domainClass.newInstance();
 		}
 		catch (InstantiationException | IllegalAccessException e) {
 			logger.log(Level.SEVERE, "Could not automatically create a new instance of the domain entity inferred from the generic type parameters.", e);
