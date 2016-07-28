@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="/resources/#{coreInfo.decorator}/decorator.xhtml">
+	
+	<ui:define name="title"><h:outputText value="#{msgsCore['login.title']}" /></ui:define>
+    
+    <ui:define name="description"><h:outputText value="#{msgsCore['login.title.description']}" /></ui:define>
+
+  	<ui:define name="body">
+		<p><h:outputText value="#{msgsCore['login.text.instructions']}" /></p>
+
+		<!-- The form to be filled with authentication information. -->
+		<ui:decorate template="/resources/#{coreInfo.decorator}/form.xhtml">
+			<ui:param name="formName" value="form" />
+			<ui:param name="formLabel" value="#{msgsCore['login.form']}" />
+			<p:focus />
+
+			<ui:decorate template="/resources/#{coreInfo.decorator}/formfield.xhtml">
+				<ui:param name="fieldName" value="email" />
+				<ui:param name="label" value="#{msgsCore['login.field.email']}" />
+				<p:inputText id="email" value="#{sessionController.email}" required="true" pt:placeholder="#{msgsCore['login.field.email.placeholder']}">
+					<f:ajax event="blur" render="emailField" />
+				</p:inputText>
+			</ui:decorate>
+
+			<ui:decorate template="/resources/#{coreInfo.decorator}/formfield.xhtml">
+				<ui:param name="fieldName" value="password" />
+				<ui:param name="label" value="#{msgsCore['login.field.password']}" />
+				<p:password id="password" value="#{sessionController.password}" required="true" feedback="false" />
+			</ui:decorate>
+
+			<ui:decorate template="/resources/#{coreInfo.decorator}/formbuttonpanel-01.xhtml">
+				<p:commandButton action="#{sessionController.login}" value="#{msgsCore['login.button.login']}" update=":globalMessages form" icon="fa fa-fw fa-key" />
+			</ui:decorate>
+		</ui:decorate>
+	</ui:define>
+</ui:composition>
+
+	

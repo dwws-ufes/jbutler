@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                template="/resources/#{coreInfo.decorator}/decorator.xhtml">
+
+	<ui:define name="title"><h:outputText value="#{msgsCore['manageAcademics.title']}" /></ui:define>
+    
+    <ui:define name="description"><h:outputText value="#{msgsCore['manageAcademics.title.description']}" /></ui:define>
+
+	<ui:define name="body">
+		<!-- Filter bar: used to filter the listing (displayed when there is at least one filter available). -->
+		<h:panelGroup id="filterBar" rendered="#{(not empty manageAcademicsController.filters)}">
+			<ui:decorate template="/resources/#{coreInfo.decorator}/form-nobox.xhtml">
+				<ui:param name="formName" value="filterForm" />
+				<p:focus />
+
+				<ui:decorate template="/resources/#{coreInfo.decorator}/formfield-filter.xhtml">
+					<p:selectOneMenu id="filter" required="true" value="#{manageAcademicsController.filterKey}">
+						<f:selectItems value="#{manageAcademicsController.filters}" var="filter" itemLabel="#{filter.label}" itemValue="#{filter.key}" />
+						<f:ajax event="change" execute="@form" listener="#{manageAcademicsController.changeFilter}" render="@form :listingForm" />
+					</p:selectOneMenu>
+					<p:inputText id="filterText" required="false" value="#{manageAcademicsController.filterParam}" rendered="#{manageAcademicsController.filter.options == null}" />
+					<p:selectOneMenu id="filterSelect" required="false" value="#{manageAcademicsController.filterParam}" rendered="#{manageAcademicsController.filter.options != null}">
+						<f:selectItems value="#{manageAcademicsController.filter.reversedOptionsLabels}" />
+					</p:selectOneMenu>
+					<p:commandButton action="#{manageAcademicsController.filter}" value="#{msgs['jbutler.crud.button.filter']}" process="@form" update=":listingForm @form" icon="fa fa-fw fa-search" />
+					<p:commandButton action="#{manageAcademicsController.cancelFilter}" value="#{msgs['jbutler.crud.button.cancelFilter']}" process="@form" update=":listingForm @form" icon="fa fa-fw fa-close" rendered="#{manageAcademicsController.filtering}" />
+					<p:commandButton action="#{manageAcademicsController.clearFilter}" value="#{msgs['jbutler.crud.button.clearFilter']}" process="@form" update=":listingForm @form" icon="fa fa-fw fa-eraser" rendered="#{not manageAcademicsController.filtering}" />
+				</ui:decorate>
+			</ui:decorate>
+		</h:panelGroup>
+		
+		<!-- The listing form. -->
+		<ui:decorate template="/resources/#{coreInfo.decorator}/form-nobox.xhtml">
+			<ui:param name="formName" value="listingForm" />
+
+			<p:dataTable
+				widgetVar="listingTable"
+				value="#{manageAcademicsController.lazyEntities}" 
+				var="entity" 
+				rows="#{manageAcademicsController.maxDataTableRowsPerPage}" 
+				rowsPerPageTemplate="#{manageAcademicsController.halfMaxDataTableRowsPerPage},#{manageAcademicsController.maxDataTableRowsPerPage},#{manageAcademicsController.doubleMaxDataTableRowsPerPage}"
+				lazy="true" 
+				paginator="true" 
+				selection="#{manageAcademicsController.selectedEntity}" 
+				selectionMode="single" 
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" 
+				paginatorPosition="bottom" 
+				loadingMessage="#{msgs['jbutler.text.ajax.loading']}" 
+				emptyMessage="#{manageAcademicsController.filtering ? msgsCore['manageAcademics.text.noEntitiesFiltered'] : msgsCore['manageAcademics.text.noEntities']}">
+
+				<p:column headerText="#{msgsCore['manageAcademics.form.name']}">
+					<h:outputText value="#{entity.name}" />
+				</p:column>
+
+				<p:column headerText="#{msgsCore['manageAcademics.form.email']}">
+					<h:outputText value="#{entity.email}" />
+				</p:column>
+
+				<p:ajax event="rowSelect" update=":listingForm:buttons" />
+			</p:dataTable>
+
+			<!-- Buttons shown below the listing. -->
+			<h:panelGroup id="buttons">
+				<ui:decorate template="/resources/#{coreInfo.decorator}/formbuttonpanel-04.xhtml">
+					<p:commandButton action="#{manageAcademicsController.create}" value="#{msgs['jbutler.crud.button.create']}" icon="fa fa-fw fa-user-plus" />
+					<p:commandButton action="#{manageAcademicsController.retrieve}" value="#{msgs['jbutler.crud.button.retrieve']}" icon="fa fa-fw fa-file-text" disabled="#{manageAcademicsController.selectedEntity == null}" />
+					<p:commandButton action="#{manageAcademicsController.update}" value="#{msgs['jbutler.crud.button.update']}" icon="fa fa-fw fa-refresh" disabled="#{manageAcademicsController.selectedEntity == null}" />
+					<p:commandButton action="#{manageAcademicsController.trash}" value="#{msgs['jbutler.crud.button.delete']}" icon="fa fa-fw fa-trash-o" disabled="#{manageAcademicsController.selectedEntity == null}" process="@this" update=":trashGroup" />
+				</ui:decorate>
+			</h:panelGroup>
+		</ui:decorate>
+
+		<!-- The trash panel: shows entities that have been selected for deletion. -->
+		<h:panelGroup id="trashGroup"><h:panelGroup rendered="#{not empty manageAcademicsController.trashCan}">
+			<ui:decorate template="/resources/#{coreInfo.decorator}/form-danger.xhtml">
+				<ui:param name="formName" value="trashForm" />
+				<ui:param name="formLabel" value="#{msgs['jbutler.crud.text.trashHeader']}" />
+				<p:dataList value="#{manageAcademicsController.trashCan}" var="entity" type="ordered">
+	            	#{entity.name} 
+	            </p:dataList>
+				<ui:decorate template="/resources/#{coreInfo.decorator}/formbuttonpanel-02.xhtml">
+					<p:commandButton action="#{manageAcademicsController.cancelDeletion}" value="#{msgs['jbutler.crud.button.cancelDeletion']}" icon="fa fa-fw fa-close" update=":trashGroup :listingForm" />
+					<p:commandButton action="#{manageAcademicsController.delete}" value="#{msgs['jbutler.crud.button.confirmDeletion']}" icon="fa fa-fw fa-trash-o" />
+				</ui:decorate>
+			</ui:decorate>
+		</h:panelGroup></h:panelGroup>
+	</ui:define>
+</ui:composition>

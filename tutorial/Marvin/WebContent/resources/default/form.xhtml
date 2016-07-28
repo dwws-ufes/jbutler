@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+	<div class="box box-solid box-info">
+		<div class="box-header with-border">
+			<h3 class="box-title">
+				<h:outputText value="#{formLabel}" />
+			</h3>
+		</div>
+		<div class="box-body">
+			<f:validateBean>
+				<h:form id="#{formName}" pt:class="form-horizontal">
+					<ui:insert />
+				</h:form>
+			</f:validateBean>
+		</div>
+	</div>
+
+</ui:composition>

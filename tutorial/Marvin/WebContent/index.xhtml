@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="/resources/#{coreInfo.decorator}/decorator.xhtml">
+
+	<ui:define name="head"></ui:define>
+	
+    <ui:define name="title"><h:outputText value="#{msgs['title.home']}" /></ui:define>
+    
+    <ui:define name="description"><h:outputText value="#{coreInfo.quote}" /></ui:define>
+
+    <ui:define name="body">
+    	<div align="center" style="margin-top: 20px;">
+    		<h:outputLink value="http://gooie-duck.deviantart.com/art/Marvin-the-Paranoid-Android-192324294">
+    			<h:graphicImage library="default" name="images/marvin.jpg" style="border: 1px solid black;" />
+    		</h:outputLink>
+    		
+    		<br/><br/><h:link outcome="core/manageAcademics/list" value="Manage Academics" />
+    	</div>
+    </ui:define>
+</ui:composition>

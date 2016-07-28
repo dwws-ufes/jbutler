@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                template="/resources/#{coreInfo.decorator}/decorator.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="#{msgsCore['manage${Entities}.title.create']}" rendered="#{(! manage${Entities}Controller.readOnly) and (manage${Entities}Controller.selectedEntity.id == null)}" />
+		<h:outputText value="#{msgsCore['manage${Entities}.title.update']}" rendered="#{(! manage${Entities}Controller.readOnly) and (manage${Entities}Controller.selectedEntity.id != null)}" />
+		<h:outputText value="#{msgsCore['manage${Entities}.title.retrieve']}" rendered="#{manage${Entities}Controller.readOnly}" />
+	</ui:define>
+    
+    <ui:define name="description">
+		<h:outputText value="#{msgsCore['manage${Entities}.title.create.description']}" rendered="#{(! manage${Entities}Controller.readOnly) and (manage${Entities}Controller.selectedEntity.id == null)}" />
+		<h:outputText value="#{msgsCore['manage${Entities}.title.update.description']}" rendered="#{(! manage${Entities}Controller.readOnly) and (manage${Entities}Controller.selectedEntity.id != null)}" />
+		<h:outputText value="#{msgsCore['manage${Entities}.title.retrieve.description']}" rendered="#{manage${Entities}Controller.readOnly}" />
+    </ui:define>
+
+	<ui:define name="body">
+		<ui:decorate template="/resources/#{coreInfo.decorator}/form.xhtml">
+			<ui:param name="formName" value="form" />
+			<ui:param name="formLabel" value="#{msgsCore['manage${Entities}.form.title']}" />
+
+			<ui:decorate template="/resources/#{coreInfo.decorator}/formfield.xhtml">
+				<ui:param name="fieldName" value="${attribute1}" />
+				<ui:param name="label" value="#{msgsCore['manage${Entities}.form.${attribute1}']}" />
+				<p:inputText id="${attribute1}" value="#{manage${Entities}Controller.selectedEntity.${attribute1}}" required="true" pt:placeholder="#{msgsCore['manage${Entities}.form.${attribute1}.placeholder']}" disabled="#{manage${Entities}Controller.readOnly}">
+					<p:ajax event="blur" update="${attribute1}Field" />
+				</p:inputText>
+			</ui:decorate>
+
+			<h:panelGroup rendered="#{! manage${Entities}Controller.readOnly}">
+				<ui:decorate template="/resources/#{coreInfo.decorator}/formbuttonpanel-02.xhtml">
+					<p:commandButton action="#{manage${Entities}Controller.list}" value="#{msgs['jbutler.crud.button.cancel']}" immediate="true" icon="fa fa-fw fa-close" />
+					<p:commandButton action="#{manage${Entities}Controller.save}" value="#{msgs['jbutler.crud.button.save']}" update=":form :globalMessages" icon="fa fa-fw fa-save" />
+				</ui:decorate>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{manage${Entities}Controller.readOnly}">
+				<ui:decorate template="/resources/#{coreInfo.decorator}/formbuttonpanel-01.xhtml">
+					<p:commandButton action="#{manage${Entities}Controller.list}" value="#{msgs['jbutler.crud.button.back']}" immediate="true" icon="fa fa-fw fa-arrow-circle-left" />
+				</ui:decorate>
+			</h:panelGroup>
+		</ui:decorate>
+    </ui:define>
+</ui:composition>

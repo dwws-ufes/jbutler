@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="/resources/#{coreInfo.decorator}/decorator.xhtml">
+	
+	<ui:define name="title"><h:outputText value="#{msgsCore['installSystem.title']}" /></ui:define>
+    
+    <ui:define name="description"><h:outputText value="#{msgsCore['installSystem.title.description']}" /></ui:define>
+
+  	<ui:define name="body">
+		<p><h:outputText value="#{msgsCore['installSystem.text.done']}" /></p>
+	</ui:define>
+</ui:composition>
+

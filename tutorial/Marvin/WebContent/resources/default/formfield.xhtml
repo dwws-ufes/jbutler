@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+	<h:panelGroup id="#{fieldName}Field">
+		<div class="form-group" >
+			<h:outputText value="#{label}:" pt:class="col-sm-2 control-label"
+				rendered="#{not (fieldName != null and facesContext.viewRoot.findComponent(formName).findComponent(fieldName).required)}" />
+			<h:outputText value="#{label}*:" pt:class="col-sm-2 control-label"
+				rendered="#{(fieldName != null and facesContext.viewRoot.findComponent(formName).findComponent(fieldName).required)}" />
+			<p:message pt:class="col-sm-10" for="#{fieldName}" rendered="#{fieldName != null}" />
+			<div class="col-sm-10">
+				<ui:insert />
+			</div>
+		</div>
+	</h:panelGroup>
+
+</ui:composition>
