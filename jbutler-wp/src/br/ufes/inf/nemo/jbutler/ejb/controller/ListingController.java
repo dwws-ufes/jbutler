@@ -497,7 +497,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	}
 
 	/**
-	 * Clears the filtering information.
+	 * Stops filtering.
 	 * 
 	 * This method is intended to be used with AJAX.
 	 */
@@ -510,6 +510,16 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 
 		// After canceling a search, always go to the first page of entities.
 		goFirst();
+	}
+	
+	/**
+	 * Stops filtering and clears the filter parameter.
+	 * 
+	 * This method is intended to be used with AJAX.
+	 */
+	public void clearFilter() {
+		filterParam = null;
+		cancelFilter();
 	}
 
 	/**
