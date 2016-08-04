@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,12 +21,12 @@ public final class TextUtils {
 	 * Produces the MD5 hash for a given string. Useful for generating hashes of passwords, for example.
 	 * 
 	 * @param str
-	 *            Any string.
+	 *          Any string.
 	 * 
 	 * @return A string containing the MD5 hash of the string given as parameter.
 	 * 
 	 * @throws NoSuchAlgorithmException
-	 *             If the MD5 conversion algorithm can't be found in the JVM implementation.
+	 *           If the MD5 conversion algorithm can't be found in the JVM implementation.
 	 */
 	public static String produceMd5Hash(String str) throws NoSuchAlgorithmException {
 		// Check for nulls.
@@ -46,18 +47,50 @@ public final class TextUtils {
 	}
 
 	/**
-	 * Produces the hash for a given string, given the name of the hash generation algorithm. Useful for generating
-	 * hashes of passwords, for example.
+	 * Produces the MD5 hash for a given string and encodes it using Base64. Useful for generating hashes of passwords,
+	 * for example.
 	 * 
 	 * @param str
-	 *            Any string.
+	 *          Any string.
+	 * 
+	 * @return A string containing the Base64 encoded MD5 hash of the string given as parameter.
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 *           If the MD5 conversion algorithm can't be found in the JVM implementation.
+	 * @throws UnsupportedEncodingException
+	 *           If the UTF-8 encoding is not supported by the system.
+	 */
+	public static String produceBase64EncodedMd5Hash(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		// Check for nulls.
+		if (str == null) return null;
+
+		// Gets the digest instance from the JVM.
+		MessageDigest md = MessageDigest.getInstance("MD5");
+
+		// Produces the numeric hash of the string.
+		byte[] bytes = str.getBytes("UTF-8");
+		byte[] digest = md.digest(bytes);
+
+		// Encodes in Base64.
+		String s = Base64.getEncoder().encodeToString(digest);
+
+		logger.log(Level.FINEST, "Base64 encoded MD5 hash produced: {0}", s);
+		return s;
+	}
+
+	/**
+	 * Produces the hash for a given string, given the name of the hash generation algorithm. Useful for generating hashes
+	 * of passwords, for example.
+	 * 
+	 * @param str
+	 *          Any string.
 	 * @param algorithm
-	 *            The name of the hash generation algorithm to instantiate.
+	 *          The name of the hash generation algorithm to instantiate.
 	 * 
 	 * @return A string containing the hash (produced with the given algorithm) of the string given as parameter.
 	 * 
 	 * @throws NoSuchAlgorithmException
-	 *             If the conversion algorithm can't be found in the JVM implementation.
+	 *           If the conversion algorithm can't be found in the JVM implementation.
 	 * @throws UnsupportedEncodingException
 	 */
 	public static String produceHash(String str, String algorithm) throws NoSuchAlgorithmException, UnsupportedEncodingException {
