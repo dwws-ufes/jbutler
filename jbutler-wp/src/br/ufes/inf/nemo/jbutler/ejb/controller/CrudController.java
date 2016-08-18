@@ -26,7 +26,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
  * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
- *            Entity manipulated by the CRUD use case.
+ *          Entity manipulated by the CRUD use case.
  * 
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
  * @version 1.1
@@ -45,10 +45,10 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 
 	/** Output: the list of entities to delete. */
 	protected SortedSet<T> trashCan = new TreeSet<T>();
-	
+
 	/** The domain class. */
 	private Class<T> domainClass;
-	
+
 	/** Constructor. */
 	@SuppressWarnings("unchecked")
 	public CrudController() {
@@ -78,7 +78,7 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	 * "form:" + propertyName, but it can be overridden in case of need.
 	 * 
 	 * @param propertyName
-	 *            The name of the property.
+	 *          The name of the property.
 	 * @return The name of the field.
 	 */
 	protected String getFieldName(String propertyName) {
@@ -115,8 +115,8 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	}
 
 	/**
-	 * Method called by the retrieve and update scenarios to check if all is OK with the retrieved entity. This method
-	 * is intended to be overridden by subclasses to implement specific behavior, such as management of sub-entities.
+	 * Method called by the retrieve and update scenarios to check if all is OK with the retrieved entity. This method is
+	 * intended to be overridden by subclasses to implement specific behavior, such as management of sub-entities.
 	 */
 	protected void checkSelectedEntity() {
 		logger.log(Level.INFO, "checkSelectedEntity() not overridden by subclass. Doing nothing");
@@ -144,22 +144,11 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	}
 
 	/**
-	 * Builds a string with the contents of the trash, so we can inform the user what has been just deleted. The basic
-	 * implementation just returns the size of the trash, therefore it is advised to override it.
-	 * 
-	 * @return A string representation of the contents of the trash.
-	 */
-	protected String listTrash() {
-		logger.log(Level.INFO, "listTrash() not overridden by subclass. Returning trashCan size: {0}", trashCan.size());
-		return "" + trashCan.size();
-	}
-
-	/**
-	 * Retrieves an existing entity from the business layer, given its ID. Sets it as the selected entity. This method
-	 * is intended to be used internally.
+	 * Retrieves an existing entity from the business layer, given its ID. Sets it as the selected entity. This method is
+	 * intended to be used internally.
 	 * 
 	 * @param id
-	 *            Persistent id of the entity to be retrieved.
+	 *          Persistent id of the entity to be retrieved.
 	 */
 	public void retrieveExistingEntity(Long id) {
 		// Checks if we're creating a new entity or updating/visualizing an existing one.
@@ -241,7 +230,7 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	 * Displays the form with the data of the selected entity. Sets the data as read-only.
 	 * 
 	 * @param id
-	 *            The persistence id of the selected entity that may need to be retrieved.
+	 *          The persistence id of the selected entity that may need to be retrieved.
 	 * 
 	 * @return The view path for the input form.
 	 */
@@ -277,7 +266,7 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	 * Displays the form with the data of the selected entity for updating the entity (leaves it read-write).
 	 * 
 	 * @param id
-	 *            The persistence id of the selected entity that may need to be retrieved.
+	 *          The persistence id of the selected entity that may need to be retrieved.
 	 * 
 	 * @return The view path for the input form.
 	 */
@@ -347,7 +336,7 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	 * 
 	 * @return The view path of the listing.
 	 */
-	public String delete() {
+	public void delete() {
 		logger.log(Level.INFO, "Deleting entities...");
 		List<Object> notDeleted = new ArrayList<Object>();
 
@@ -370,11 +359,11 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 		// Writes the status message (only if at least one entity was deleted successfully). Empties it afterwards.
 		trashCan.removeAll(notDeleted);
 		if (!trashCan.isEmpty()) {
-			addGlobalI18nMessage(getBundleName(), FacesMessage.SEVERITY_INFO, getBundlePrefix() + ".text.deleteSucceeded", listTrash());
+			addGlobalI18nMessage(getBundleName(), FacesMessage.SEVERITY_INFO, getBundlePrefix() + ".text.deleteSucceeded", trashCan.size());
 			trashCan.clear();
 		}
 
-		// Goes back to the listing.
-		return list();
+		// Clears the selection.
+		selectedEntity = null;
 	}
 }

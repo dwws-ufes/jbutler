@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.security.PermitAll;
+
 import br.ufes.inf.nemo.jbutler.ejb.application.filters.Filter;
 import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
 
@@ -15,6 +17,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
  * @version 1.0
  */
+@PermitAll
 public abstract class ListingServiceBean<T extends PersistentObject> implements ListingService<T> {
 	/** Serialization id. */
 	private static final long serialVersionUID = 1L;

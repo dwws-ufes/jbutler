@@ -3,6 +3,8 @@ package br.ufes.inf.nemo.jbutler.ejb.application;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.security.PermitAll;
+
 import br.ufes.inf.nemo.jbutler.ReflectionUtil;
 import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
 
@@ -26,6 +28,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
  * @version 1.1
  */
+@PermitAll
 public abstract class CrudServiceBean<T extends PersistentObject> extends ListingServiceBean<T> implements CrudService<T> {
 	/** Serialization id. */
 	private static final long serialVersionUID = 1L;
@@ -103,7 +106,7 @@ public abstract class CrudServiceBean<T extends PersistentObject> extends Listin
 	 * 
 	 * @return The newly-created CRUD exception or the old CRUD exception with a new validation error.
 	 */
-	protected CrudException addValidationError(CrudException crudException, String message, String messageKey, Object ... messageParams) {
+	protected CrudException addGlobalValidationError(CrudException crudException, String message, String messageKey, Object ... messageParams) {
 		logger.log(Level.FINER, "Adding a validation error with key \"{0}\"...", messageKey);
 
 		if (crudException == null) {
@@ -132,7 +135,7 @@ public abstract class CrudServiceBean<T extends PersistentObject> extends Listin
 	 * 
 	 * @return The newly-created CRUD exception or the old CRUD exception with a new validation error.
 	 */
-	protected CrudException addValidationError(CrudException crudException, String message, String fieldName, String messageKey, Object ... messageParams) {
+	protected CrudException addFieldValidationError(CrudException crudException, String message, String fieldName, String messageKey, Object ... messageParams) {
 		logger.log(Level.FINER, "Adding field validation error with key \"{0}\" to field \"{1}\"...", new Object[] { messageKey, fieldName });
 
 		if (crudException == null) {

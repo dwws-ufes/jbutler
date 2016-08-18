@@ -260,8 +260,11 @@ public abstract class JSFController implements Serializable {
 
 		// Creates the faces message that will be added to the context according to the given parameters.
 		FacesMessage message = null;
-		if (severity != null) {
+		if (severity != null && detail != null) {
 			message = new FacesMessage(severity, summary, detail);
+		}
+		else if (severity != null) {
+			message = new FacesMessage(severity, summary, "");
 		}
 		else if (detail != null) {
 			message = new FacesMessage(summary, detail);
