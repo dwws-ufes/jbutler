@@ -92,6 +92,7 @@ public final class TextUtils {
 	 * @throws NoSuchAlgorithmException
 	 *           If the conversion algorithm can't be found in the JVM implementation.
 	 * @throws UnsupportedEncodingException
+	 *           If the UTF-8 encoding is not supported.
 	 */
 	public static String produceHash(String str, String algorithm) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		// Check for nulls.

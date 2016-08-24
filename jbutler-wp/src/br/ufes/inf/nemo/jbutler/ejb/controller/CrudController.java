@@ -333,8 +333,6 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	/**
 	 * Deletes all the entities in the trash can. If there are any problems deleting entities, they will be displayed in
 	 * the listing page afterwards.
-	 * 
-	 * @return The view path of the listing.
 	 */
 	public void delete() {
 		logger.log(Level.INFO, "Deleting entities...");
