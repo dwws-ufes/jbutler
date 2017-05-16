@@ -27,7 +27,7 @@ Then you can define one of the projects as a dependency, e.g.:
 <dependency>
 	<groupId>br.ufes.inf.nemo</groupId>
 	<artifactId>jbutler-wp</artifactId>
-	<version>1.2</version>
+	<version>1.4</version>
 </dependency>
 ```
 
