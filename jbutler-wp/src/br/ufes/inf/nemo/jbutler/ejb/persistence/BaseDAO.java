@@ -20,7 +20,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.exceptions.PersistentObjectNotFo
  * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
- *            Persistent class that is managed by the DAO.
+ *          Persistent class that is managed by the DAO.
  * @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseJPADAO
  * @see br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
@@ -29,13 +29,13 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.exceptions.PersistentObjectNotFo
 public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	/**
 	 * Returns the class that is managed by the DAO. This information is needed for some persistence operations and the
-	 * method is made public because other classes that use the DAOs in a generic way could benefit from knowing the
-	 * class that is managed by it.
+	 * method is made public because other classes that use the DAOs in a generic way could benefit from knowing the class
+	 * that is managed by it.
 	 * 
 	 * @return A class object that represents the class managed by the DAO.
 	 */
 	public Class<T> getDomainClass();
-	
+
 	/**
 	 * Returns the number of persistent objects of this class.
 	 * 
@@ -47,13 +47,25 @@ public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	 * Returns the number of persistent objects of this class that match the specified filter.
 	 * 
 	 * @param filter
-	 *            The specification that filters the objects from the persistent class.
+	 *          The specification that filters the objects from the persistent class.
 	 * @param value
-	 *            The filter's input.
+	 *          The filter's input.
 	 * 
 	 * @return Number of existing persistent objects of this class that match the given filter.
 	 */
 	long retrieveFilteredCount(Filter<?> filter, String value);
+
+	/**
+	 * Returns the number of persistent objects of this class that match the specified filters.
+	 * 
+	 * @param filters
+	 *          The specification that filters the objects from the persistent class.
+	 * @param values
+	 *          The filters' respective input.
+	 * 
+	 * @return Number of existing persistent objects of this class that match the given filter.
+	 */
+	long retrieveFilteredCount(Filter<?>[] filters, String[] values);
 
 	/**
 	 * Retrieves all objects from the persistent class.
@@ -66,19 +78,31 @@ public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	 * Retrieve all objects from the persistent class that match the specified filter.
 	 * 
 	 * @param filter
-	 *            The specification that filters the objects from the persistent class.
+	 *          The specification that filters the objects from the persistent class.
 	 * @param value
-	 *            The filter's input.
+	 *          The filter's input.
 	 * 
 	 * @return List with all objects from the persistent domain class.
 	 */
 	List<T> retrieveWithFilter(Filter<?> filter, String value);
 
 	/**
+	 * Retrieve all objects from the persistent class that match the specified filters.
+	 * 
+	 * @param filters
+	 *          The specification that filters the objects from the persistent class.
+	 * @param values
+	 *          The filters' respective input.
+	 * 
+	 * @return List with all objects from the persistent domain class.
+	 */
+	List<T> retrieveWithFilters(Filter<?>[] filters, String[] values);
+
+	/**
 	 * Retrieves some objects from the persistent class.
 	 * 
 	 * @param interval
-	 *            Array of size 2 with the interval [a, b) (retrieves objects from index a through b-1).
+	 *          Array of size 2 with the interval [a, b) (retrieves objects from index a through b-1).
 	 * 
 	 * @return List with some objects (according to the given interval) from the persistent domain class.
 	 */
@@ -88,21 +112,35 @@ public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	 * Retrieve some objects from the persistent class that match the specified filter.
 	 * 
 	 * @param filter
-	 *            The specification that filters the objects from the persistent class.
+	 *          The specification that filters the objects from the persistent class.
 	 * @param value
-	 *            The filter's input.
+	 *          The filter's input.
 	 * @param interval
-	 *            Array of size 2 with the interval [a, b) (retrieves objects from index a through b-1).
+	 *          Array of size 2 with the interval [a, b) (retrieves objects from index a through b-1).
 	 * 
-	 * @return List with some objects (according to the given interval) from the persistent domain class.
+	 * @return List with some objects (according to the given interval and filter) from the persistent domain class.
 	 */
 	List<T> retrieveSomeWithFilter(Filter<?> filter, String value, int[] interval);
+
+	/**
+	 * Retrieve some objects from the persistent class that match the specified filters.
+	 * 
+	 * @param filters
+	 *          The specification that filters the objects from the persistent class.
+	 * @param values
+	 *          The filters' respective input.
+	 * @param interval
+	 *          Array of size 2 with the interval [a, b) (retrieves objects from index a through b-1).
+	 * 
+	 * @return List with some objects (according to the given interval and filters) from the persistent domain class.
+	 */
+	List<T> retrieveSomeWithFilters(Filter<?>[] filters, String[] values, int[] interval);
 
 	/**
 	 * Obtains a persistent object given its id.
 	 * 
 	 * @param id
-	 *            The persistent object's id.
+	 *          The persistent object's id.
 	 * 
 	 * @return The persistent object that has the given id.
 	 */
@@ -112,14 +150,14 @@ public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	 * Obtains a persistent object given its UUID.
 	 * 
 	 * @param uuid
-	 *            The persistent object's UUID.
+	 *          The persistent object's UUID.
 	 * 
 	 * @return The persistent object that has the given UUID.
 	 * 
 	 * @throws PersistentObjectNotFoundException
-	 *             If there are no entities with the exact UUID given.
+	 *           If there are no entities with the exact UUID given.
 	 * @throws MultiplePersistentObjectsFoundException
-	 *             If there are more than one entity with the exact UUID given.
+	 *           If there are more than one entity with the exact UUID given.
 	 */
 	T retrieveByUuid(String uuid) throws PersistentObjectNotFoundException, MultiplePersistentObjectsFoundException;
 
@@ -127,7 +165,7 @@ public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	 * Stores an object in the persistent media.
 	 * 
 	 * @param object
-	 *            The object to store.
+	 *          The object to store.
 	 */
 	void save(T object);
 
@@ -135,7 +173,7 @@ public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	 * Removes an object from the persistent media.
 	 * 
 	 * @param object
-	 *            The object to delete.
+	 *          The object to delete.
 	 */
 	void delete(T object);
 
@@ -145,7 +183,7 @@ public interface BaseDAO<T extends PersistentObject> extends Serializable {
 	 * Exceptions.
 	 * 
 	 * @param object
-	 *            The object to merge.
+	 *          The object to merge.
 	 * 
 	 * @return The merged object.
 	 */

@@ -11,12 +11,12 @@ import java.util.Map;
  * user to select what kind of filter he/she wants to apply. The other properties of the class are set depending on the
  * type of filter: simple, multiple-choice, reverse multiple-choice or many-to-many.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE).</i>
  * 
  * @param <T>
  *            Type of the objects that compose the list of options to choose from.
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
- * @version 1.1
+ * @version 1.2
  */
 public interface Filter<T> extends Serializable {
 	/**
@@ -101,4 +101,22 @@ public interface Filter<T> extends Serializable {
 	 * @see br.ufes.inf.nemo.jbutler.ejb.application.filters.FilterType
 	 */
 	Enum<?> getEnum(String value);
+	
+	/**
+	 * TODO: document this method.
+	 * @return
+	 */
+	boolean isSupportsText();
+	
+	/**
+	 * TODO: document this method.
+	 * @return
+	 */
+	boolean isSupportsBoolean();
+	
+	/**
+	 * TODO: document this method.
+	 * @return
+	 */
+	boolean isSupportsChoice();
 }

@@ -371,8 +371,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 		firstEntityIndex = 0;
 
 		// Always counts the entities in this method, as it can be called via AJAX from the pages. This also sets the
-		// last
-		// entity index.
+		// last entity index.
 		count();
 
 		// Retrieve the entities from the application layer.

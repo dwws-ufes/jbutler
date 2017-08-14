@@ -9,12 +9,12 @@ import java.util.Map;
  * Abstract superclass for filters, implements the basic features all filters have: an unique identifier, the name of
  * the field that will be filtered, the label to be used in the GUI and a list of extra criteria to be applied.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE).</i>
  * 
  * @param <T>
  *            Type of the objects that compose the list of options to choose from.
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
- * @version 1.1
+ * @version 1.2
  */
 public abstract class AbstractFilter<T> implements Filter<T>, Comparable<AbstractFilter<?>> {
 	/** Serialization id. */
@@ -124,7 +124,41 @@ public abstract class AbstractFilter<T> implements Filter<T>, Comparable<Abstrac
 	public Enum<?> getEnum(String value) {
 		return null;
 	}
-
+	
+	/** @see br.ufes.inf.nemo.jbutler.ejb.application.filters.Filter#isSupportsText() */
+	public boolean isSupportsText() {
+		switch (getType()) {
+		case LIKE:
+		case MANY_TO_MANY:
+		case SIMPLE:
+			return true;
+		default:
+			return false;
+		}
+	}	
+	
+	/** @see br.ufes.inf.nemo.jbutler.ejb.application.filters.Filter#isSupportsBoolean() */
+	public boolean isSupportsBoolean() {
+		switch (getType()) {
+		case BOOLEAN:
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	/** @see br.ufes.inf.nemo.jbutler.ejb.application.filters.Filter#isSupportsChoice() */
+	public boolean isSupportsChoice() {
+		switch (getType()) {
+		case ENUM_MULTIPLE_CHOICE:
+		case MULTIPLE_CHOICE:
+		case REVERSE_MULTIPLE_CHOICE:
+			return true;
+		default:
+			return false;
+		}
+	}
+	
 	/** @see java.lang.Comparable#compareTo(java.lang.Object) */
 	@Override
 	public int compareTo(AbstractFilter<?> o) {

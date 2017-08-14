@@ -48,14 +48,14 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.exceptions.PersistentObjectNotFo
  * 
  * Most methods in this class were generated automatically by NetBeans 6.8 and adapted to the DAO interface.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE).</i>
  * 
  * @param <T>
- *            Persistent class that is managed by the DAO.
+ *          Persistent class that is managed by the DAO.
  * @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO
  * @see br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
- * @version 1.1
+ * @version 1.2
  */
 public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<T> {
 	/** Serialization id. */
@@ -63,14 +63,14 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 
 	/** The logger. */
 	private static final Logger logger = Logger.getLogger(BaseJPADAO.class.getCanonicalName());
-	
+
 	/** The domain class. */
 	private Class<T> domainClass;
-	
+
 	/** Constructor. */
 	@SuppressWarnings("unchecked")
 	public BaseJPADAO() {
-		domainClass = (Class<T>)ReflectionUtil.determineTypeArgument(getClass());
+		domainClass = (Class<T>) ReflectionUtil.determineTypeArgument(getClass());
 	}
 
 	/**
@@ -93,9 +93,9 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 * retrieveSome methods. The default implementation returns null, establishing no order.
 	 * 
 	 * @param cb
-	 *            The criteria builder object, needed to build queries.
+	 *          The criteria builder object, needed to build queries.
 	 * @param root
-	 *            The root of the query, meta-object that represents the class of objects beind queried.
+	 *          The root of the query, meta-object that represents the class of objects beind queried.
 	 * 
 	 * @return A list of Order objects
 	 * @see javax.persistence.criteria.Order
@@ -109,11 +109,11 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 * Applies ordering to a query under construction, if any ordering has been provided by the concrete DAO class.
 	 * 
 	 * @param cb
-	 *            The criteria builder object, needed to build queries.
+	 *          The criteria builder object, needed to build queries.
 	 * @param root
-	 *            The root of the query, meta-object that represents the class of objects beind queried.
+	 *          The root of the query, meta-object that represents the class of objects beind queried.
 	 * @param cq
-	 *            The query being constructed.
+	 *          The query being constructed.
 	 */
 	protected void applyOrdering(CriteriaBuilder cb, Root<T> root, CriteriaQuery<T> cq) {
 		// Checks if the order list has been provided and applies it.
@@ -128,16 +128,16 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 * cases.
 	 * 
 	 * @param cq
-	 *            The criteria query to execute.
+	 *          The criteria query to execute.
 	 * @param params
-	 *            The parameters used in the criteria query, which will be included in the exceptions for completeness.
+	 *          The parameters used in the criteria query, which will be included in the exceptions for completeness.
 	 * 
 	 * @return A single object of the managed class which is the result of the query.
 	 * 
 	 * @throws PersistentObjectNotFoundException
-	 *             If no objects matched the query.
+	 *           If no objects matched the query.
 	 * @throws MultiplePersistentObjectsFoundException
-	 *             If more than one object matched the query.
+	 *           If more than one object matched the query.
 	 */
 	protected T executeSingleResultQuery(CriteriaQuery<T> cq, Object ... params) throws PersistentObjectNotFoundException, MultiplePersistentObjectsFoundException {
 		// Looks for a single result. Throws a checked exception if the entity is not found or in case of multiple
@@ -179,14 +179,22 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 */
 	@Override
 	public long retrieveFilteredCount(Filter<?> filter, String value) {
+		return retrieveFilteredCount(new Filter<?>[] { filter }, new String[] { value });
+	}
+
+	/**
+	 * @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#retrieveFilteredCount(br.ufes.inf.nemo.jbutler.ejb.application.filters.Filter[],
+	 *      java.lang.String[])
+	 */
+	public long retrieveFilteredCount(Filter<?>[] filters, String[] values) {
 		// Builds the filtered query.
 		EntityManager em = getEntityManager();
-		CriteriaQuery<Long> cq = buildFilteredCountCriteriaQuery(filter, value);
+		CriteriaQuery<Long> cq = buildFilteredCountCriteriaQuery(filters, values);
 		Query q = em.createQuery(cq);
 
 		// Retrieve the value and return.
 		long count = ((Long) q.getSingleResult()).longValue();
-		logger.log(Level.INFO, "Retrieved count for {0}, filtering {1} with param \"{2}\": {3}", new Object[] { getDomainClass().getName(), filter.getKey(), value, count });
+		logger.log(Level.INFO, "Retrieved count for {0}, with {1} filter(s): {2}", new Object[] { getDomainClass().getName(), filters.length, count });
 		return count;
 	}
 
@@ -217,13 +225,21 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 */
 	@Override
 	public List<T> retrieveWithFilter(Filter<?> filter, String value) {
-		logger.log(Level.FINER, "Retrieving all objects of class \"{0}\" using a filter (filter \"{1}\" with value \"{2}\")...", new Object[] { getDomainClass().getName(), filter.getKey(), value });
+		return retrieveWithFilters(new Filter<?>[] { filter }, new String[] { value });
+	}
+
+	/**
+	 * @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#retrieveWithFilters(br.ufes.inf.nemo.jbutler.ejb.application.filters.Filter[],
+	 *      java.lang.String[])
+	 */
+	public List<T> retrieveWithFilters(Filter<?>[] filters, String[] values) {
+		logger.log(Level.FINER, "Retrieving all objects of class \"{0}\" using {1} filter(s)...", new Object[] { getDomainClass().getName(), filters.length });
 
 		// Builds the filtered query and returns the result.
 		EntityManager em = getEntityManager();
-		CriteriaQuery<T> cq = buildFilteredCriteriaQuery(filter, value);
+		CriteriaQuery<T> cq = buildFilteredCriteriaQuery(filters, values);
 		List<T> result = em.createQuery(cq).getResultList();
-		logger.log(Level.INFO, "Retrieve with filter (filter \"{0}\" with value \"{1}\") for class \"{2}\" returned \"{3}\" objects", new Object[] { filter.getKey(), value, getDomainClass().getName(), result.size() });
+		logger.log(Level.INFO, "Retrieve with {0} filter(s) for class \"{1}\" returned \"{2}\" objects", new Object[] { filters.length, getDomainClass().getName(), result.size() });
 		return result;
 	}
 
@@ -259,18 +275,22 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 */
 	@Override
 	public List<T> retrieveSomeWithFilter(Filter<?> filter, String value, int[] interval) {
-		logger.log(Level.FINER, "Retrieving objects of class \"{0}\" in interval [{1}, {2}) using a filter (filter \"{3}\" with value \"{4}\")...", new Object[] { getDomainClass().getName(), interval[0], interval[1], filter.getKey(), value });
+		return retrieveSomeWithFilters(new Filter<?>[] { filter }, new String[] { value }, interval);
+	}
+
+	public List<T> retrieveSomeWithFilters(Filter<?>[] filters, String[] values, int[] interval) {
+		logger.log(Level.FINER, "Retrieving objects of class \"{0}\" in interval [{1}, {2}) using {3} filter(s)...", new Object[] { getDomainClass().getName(), interval[0], interval[1], filters.length });
 
 		// Builds the filtered query.
 		EntityManager em = getEntityManager();
-		CriteriaQuery<T> cq = buildFilteredCriteriaQuery(filter, value);
+		CriteriaQuery<T> cq = buildFilteredCriteriaQuery(filters, values);
 
 		// Determine the interval to retrieve and return the result.
 		TypedQuery<T> q = em.createQuery(cq);
 		q.setMaxResults(interval[1] - interval[0]);
 		q.setFirstResult(interval[0]);
 		List<T> result = q.getResultList();
-		logger.log(Level.INFO, "Retrieve in interval [{0}, {1}) with filter (filter \"{2}\" with value \"{3}\") for class \"{4}\" returned \"{5}\" objects", new Object[] { interval[0], interval[1], filter.getKey(), value, getDomainClass().getName(), result.size() });
+		logger.log(Level.INFO, "Retrieve in interval [{0}, {1}) with {2} filter(s) for class \"{3}\" returned \"{4}\" objects", new Object[] { interval[0], interval[1], filters.length, getDomainClass().getName(), result.size() });
 		return result;
 	}
 
@@ -303,7 +323,9 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 		return result;
 	}
 
-	/** @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#save(br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject) */
+	/**
+	 * @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#save(br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject)
+	 */
 	@Override
 	public void save(T object) {
 		logger.log(Level.FINER, "Saving an object of class {0}: \"{1}\"...", new Object[] { getDomainClass().getName(), object });
@@ -315,7 +337,9 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 		else em.persist(object);
 	}
 
-	/** @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#delete(br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject) */
+	/**
+	 * @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#delete(br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject)
+	 */
 	@Override
 	public void delete(T object) {
 		logger.log(Level.FINER, "Deleting an object of class {0}: \"{1}\"...", new Object[] { getDomainClass().getName(), object });
@@ -325,7 +349,9 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 		em.remove(em.merge(object));
 	}
 
-	/** @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#merge(br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject) */
+	/**
+	 * @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#merge(br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject)
+	 */
 	@Override
 	public T merge(T object) {
 		logger.log(Level.FINER, "Merging an object of class {0}: \"{1}\"...", new Object[] { getDomainClass().getName(), object });
@@ -335,7 +361,9 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 		return em.merge(object);
 	}
 
-	/** @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#refresh(br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject) */
+	/**
+	 * @see br.ufes.inf.nemo.jbutler.ejb.persistence.BaseDAO#refresh(br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject)
+	 */
 	@Override
 	public T refresh(T object) {
 		logger.log(Level.FINER, "Refreshing an object of class {0}: \"{1}\"...", new Object[] { getDomainClass().getName(), object });
@@ -353,14 +381,14 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 * Builds a criteria query to return that retrieves the number of domain objects (the object count) according to the
 	 * given filter (and its embedded criteria).
 	 * 
-	 * @param filter
-	 *            The filter to be applied to the query.
-	 * @param value
-	 *            The value associated with the filter.
+	 * @param filters
+	 *          The filters to be applied to the query.
+	 * @param values
+	 *          The values associated with their respective filter.
 	 * 
 	 * @return The CriteriaQuery object to be executed to retrieve the filtered object count.
 	 */
-	private CriteriaQuery<Long> buildFilteredCountCriteriaQuery(Filter<?> filter, String value) {
+	private CriteriaQuery<Long> buildFilteredCountCriteriaQuery(Filter<?>[] filters, String[] values) {
 		// Using the entity manager, create a criteria query to retrieve an object count.
 		EntityManager em = getEntityManager();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -369,22 +397,22 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 		cq.select(cb.count(root));
 
 		// Filters the criteria query and returns.
-		filterCriteriaQuery(cb, cq, root, filter, value);
+		filterCriteriaQuery(cb, cq, root, filters, values);
 		return cq;
 	}
 
 	/**
-	 * Builds a criteria query that retrieves the domain objects according to the given filter (and its embedded
+	 * Builds a criteria query that retrieves the domain objects according to the given filters (and their embedded
 	 * criteria).
 	 * 
-	 * @param filter
-	 *            The filter to be applied to the query.
-	 * @param value
-	 *            The value associated with the filter.
+	 * @param filters
+	 *          The filters to be applied to the query.
+	 * @param values
+	 *          The values associated with their respective filters.
 	 * 
 	 * @return The CriteriaQuery object to be executed to retrieve the filtered objects.
 	 */
-	private CriteriaQuery<T> buildFilteredCriteriaQuery(Filter<?> filter, String value) {
+	private CriteriaQuery<T> buildFilteredCriteriaQuery(Filter<?>[] filters, String[] values) {
 		// Using the entity manager, create a criteria query to retrieve objects of the domain class.
 		EntityManager em = getEntityManager();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -393,28 +421,28 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 		cq.select(root);
 
 		// Filters the criteria query, applies ordering (if provided) and returns.
-		filterCriteriaQuery(cb, cq, root, filter, value);
+		filterCriteriaQuery(cb, cq, root, filters, values);
 		applyOrdering(cb, root, cq);
 		return cq;
 	}
 
 	/**
-	 * Applies a filter to a criteria query. Used both by buildFilteredCountCriteriaQuery() and
+	 * Applies multiple filters to a criteria query. Used both by buildFilteredCountCriteriaQuery() and
 	 * buildFilteredCriteriaQuery().
 	 * 
 	 * @param cb
-	 *            The object that builds the criteria query.
+	 *          The object that builds the criteria query.
 	 * @param cq
-	 *            The criteria query itself.
+	 *          The criteria query itself.
 	 * @param root
-	 *            The root of the query, which specifies the class to which the query is applied.
-	 * @param filter
-	 *            The filter that will be applied to the criteria query.
-	 * @param value
-	 *            The value associated with the filter.
+	 *          The root of the query, which specifies the class to which the query is applied.
+	 * @param filters
+	 *          The filters that will be applied to the criteria query.
+	 * @param values
+	 *          The values associated with the respective filters.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void filterCriteriaQuery(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<T> root, Filter<?> filter, String value) {
+	private void filterCriteriaQuery(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<T> root, Filter<?>[] filters, String[] values) {
 		// Remove @SupressWarnings and add the correct generic types to all operations.
 
 		// Get the model for the domain class so we can perform filtering.
@@ -423,159 +451,174 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 		// Add predicates to a list in order to join them together in a conjunction for the WHERE clause.
 		List<Predicate> predicates = new ArrayList<Predicate>();
 
-		// Process each criterion, adding a predicate to the list. The predicate to add depends on the type of
-		// criterion.
-		for (Criterion crit : filter.getCriteria())
-			predicates.add(createPredicate(cb, root, model, crit));
+		// Goes through all filters.
+		for (int i = 0; i < filters.length; i++) {
+			Filter<?> filter = filters[i];
+			String value = values[i];
 
-		// Check which type of filter is being used.
-		Long id = null;
-		Criterion criterion = null;
-		TypeFrom pair = null;
-		switch (filter.getType()) {
-		case MANY_TO_MANY:
-			// Not yet tested...
+			// Process each criterion, adding a predicate to the list, depending on the type of criterion.
+			for (Criterion crit : filter.getCriteria())
+				predicates.add(createPredicate(cb, root, model, crit));
 
-			// Using a many-to-many filter. This query looks like this (without the extra criteria):
-			// from <domain-class> obj inner join obj.<field-name> as joinObj where <joined-criteria> and (<filters>)
-			// where:
-			// <joined-criteria> is a conjunction of ISNULL, NOTNULL, EQUAL or LIKE criteria on the joined object
-			// <filter> is a disjunction of LIKE criteria on different properties of the joined object, like:
-			// joinObj.<a-property> LIKE '%<value>%' or joinObj.<another-property> LIKE '%<value>%' ...
+			// Check which type of filter is being used.
+			Long id = null;
+			Criterion criterion = null;
+			TypeFrom pair = null;
+			switch (filter.getType()) {
+			case MANY_TO_MANY:
+				// Not yet tested...
 
-			// Performs the join of the two elements.
-			SingularAttribute joinObjAttr = model.getSingularAttribute(filter.getFieldName());
-			Join joinRoot = root.join(joinObjAttr);
-			ManagedType joinObjModel = joinObjAttr.getDeclaringType();
+				// Using a many-to-many filter. This query looks like this (without the extra criteria):
+				// from <domain-class> obj inner join obj.<field-name> as joinObj where <joined-criteria> and (<filters>)
+				// where:
+				// <joined-criteria> is a conjunction of ISNULL, NOTNULL, EQUAL or LIKE criteria on the joined object
+				// <filter> is a disjunction of LIKE criteria on different properties of the joined object, like:
+				// joinObj.<a-property> LIKE '%<value>%' or joinObj.<another-property> LIKE '%<value>%' ...
 
-			// Adds to the predicate list with the criteria to be applied to the joined entity (the conjunction).
-			List<Criterion> joinedCriteria = ((ManyToManyFilter) filter).getJoinedCriteria();
-			for (Criterion crit : joinedCriteria)
-				predicates.add(createPredicate(cb, joinRoot, joinObjModel, crit));
+				// Performs the join of the two elements.
+				SingularAttribute joinObjAttr = model.getSingularAttribute(filter.getFieldName());
+				Join joinRoot = root.join(joinObjAttr);
+				ManagedType joinObjModel = joinObjAttr.getDeclaringType();
 
-			// Builds a predicate list with the filters to be applied to the joined-object (the disjunction).
-			List<Predicate> orPredicates = new ArrayList<Predicate>();
-			Scanner scanner = new Scanner(filter.getSubFieldNames());
-			scanner.useDelimiter("\\s*,\\s*");
-			while (scanner.hasNext())
-				orPredicates.add(cb.like(joinRoot.get(joinObjModel.getSingularAttribute(scanner.next(), String.class)), "%" + value + "%"));
+				// Adds to the predicate list with the criteria to be applied to the joined entity (the conjunction).
+				List<Criterion> joinedCriteria = ((ManyToManyFilter) filter).getJoinedCriteria();
+				for (Criterion crit : joinedCriteria)
+					predicates.add(createPredicate(cb, joinRoot, joinObjModel, crit));
 
-			// Builds the query creating an OR expression for the disjunction and joining all criteria.
-			Predicate disjunction = cb.or(orPredicates.toArray(new Predicate[0]));
-			predicates.add(disjunction);
-			cq.where(predicates.toArray(new Predicate[0]));
+				// Builds a predicate list with the filters to be applied to the joined-object (the disjunction).
+				List<Predicate> orPredicates = new ArrayList<Predicate>();
+				Scanner scanner = new Scanner(filter.getSubFieldNames());
+				scanner.useDelimiter("\\s*,\\s*");
+				while (scanner.hasNext())
+					orPredicates.add(cb.like(joinRoot.get(joinObjModel.getSingularAttribute(scanner.next(), String.class)), "%" + value + "%"));
 
-			break;
+				// Builds the query creating an OR expression for the disjunction and joining all criteria.
+				Predicate disjunction = cb.or(orPredicates.toArray(new Predicate[0]));
+				predicates.add(disjunction);
+				cq.where(predicates.toArray(new Predicate[0]));
 
-		case REVERSE_MULTIPLE_CHOICE:
-			// Using a reverse multiple-choice filter. This query looks like this (without the extra criteria):
-			// from <domain-class> obj where obj.<field-name> in (
-			// select subDep.id from <sub-class> sub inner join sub.<sub-field-name> subDep where sub.id =
-			// <value-converted-as-id>
-			// )
-
-			// Check if the ID was correctly supplied.
-			try {
-				id = Long.parseLong(value);
-			}
-			catch (NumberFormatException e) {
-				throw new IllegalArgumentException("When using reverse multiple-choice filter, a number must be supplied (the related object's ID).", e);
-			}
-
-			// Builds the subquery needed to perform a reverse multiple-choice filter.
-			Class clazz = filter.getOptions().iterator().next().getClass();
-			Subquery<Long> sq = cq.subquery(Long.class);
-			Root subDepRoot = sq.from(clazz);
-			Attribute subDepAttr = subDepRoot.getModel().getAttribute(filter.getSubFieldNames());
-			ManagedType subDepModel = subDepAttr.getDeclaringType();
-			Join subDepJoin = null;
-			switch (((PluralAttribute) subDepAttr).getCollectionType()) {
-			case COLLECTION:
-				subDepJoin = sq.correlate(subDepRoot.join((CollectionAttribute) subDepAttr));
 				break;
-			case LIST:
-				subDepJoin = sq.correlate(subDepRoot.join((ListAttribute) subDepAttr));
+
+			case REVERSE_MULTIPLE_CHOICE:
+				// Using a reverse multiple-choice filter. This query looks like this (without the extra criteria):
+				// from <domain-class> obj where obj.<field-name> in (
+				// select subDep.id from <sub-class> sub inner join sub.<sub-field-name> subDep where sub.id =
+				// <value-converted-as-id>
+				// )
+
+				// Check if the ID was correctly supplied.
+				try {
+					id = Long.parseLong(value);
+				}
+				catch (NumberFormatException e) {
+					throw new IllegalArgumentException("When using reverse multiple-choice filter, a number must be supplied (the related object's ID).", e);
+				}
+
+				// Builds the subquery needed to perform a reverse multiple-choice filter.
+				Class clazz = filter.getOptions().iterator().next().getClass();
+				Subquery<Long> sq = cq.subquery(Long.class);
+				Root subDepRoot = sq.from(clazz);
+				Attribute subDepAttr = subDepRoot.getModel().getAttribute(filter.getSubFieldNames());
+				ManagedType subDepModel = subDepAttr.getDeclaringType();
+				Join subDepJoin = null;
+				switch (((PluralAttribute) subDepAttr).getCollectionType()) {
+				case COLLECTION:
+					subDepJoin = sq.correlate(subDepRoot.join((CollectionAttribute) subDepAttr));
+					break;
+				case LIST:
+					subDepJoin = sq.correlate(subDepRoot.join((ListAttribute) subDepAttr));
+					break;
+				case MAP:
+					subDepJoin = sq.correlate(subDepRoot.join((MapAttribute) subDepAttr));
+					break;
+				case SET:
+					subDepJoin = sq.correlate(subDepRoot.join((SetAttribute) subDepAttr));
+					break;
+				}
+				sq.where(cb.equal(subDepRoot.get(subDepRoot.getModel().getSingularAttribute("id")), id));
+				sq.select(subDepJoin.get(subDepModel.getSingularAttribute("id")));
+
+				// Builds the query joining together the previous criteria with an IN criterion.
+				pair = findManagedType(root, model, filter.getFieldName() + ".id");
+				predicates.add(cb.in(pair.from.get(pair.type.getSingularAttribute("id"))).value(sq));
+				cq.where(predicates.toArray(new Predicate[0]));
 				break;
-			case MAP:
-				subDepJoin = sq.correlate(subDepRoot.join((MapAttribute) subDepAttr));
+
+			case ENUM_MULTIPLE_CHOICE:
+				// Using an enum multiple-choice filter. This query looks like this (without the extra criteria):
+				// from <domain-class> obj where obj.<field-name> = <enum-value>
+
+				// Obtains the instance of the enumeration to pass as argument given the enumeration name passed as
+				// parameter.
+				Enum<?> enumValue = filter.getEnum(value);
+
+				// Not tested after changed to findManagedType().
+				//
+				// Add to the other criteria a EQUAL criterion between the related object's ID and the specified value.
+				// predicates.add(cb.equal(root.get(model.getSingularAttribute(filter.getFieldName())), enumValue));
+				// pair = findManagedType(root, model, filter.getFieldName());
+				// predicates.add(cb.equal(pair.from.get(pair.type.getSingularAttribute(filter.getFieldName())),
+				// enumValue));
+				criterion = new Criterion(filter.getFieldName(), CriterionType.EQUALS, enumValue);
+				predicates.add(createPredicate(cb, root, model, criterion));
+				cq.where(predicates.toArray(new Predicate[0]));
+
 				break;
-			case SET:
-				subDepJoin = sq.correlate(subDepRoot.join((SetAttribute) subDepAttr));
+
+			case MULTIPLE_CHOICE:
+				// Not yet tested...
+
+				// Using a multiple-choice filter. This query looks like this (without the extra criteria):
+				// from <domain-class> obj where obj.<field-name>.id = <value-converted-as-id>
+
+				// Check if the ID was correctly supplied.
+				try {
+					id = Long.parseLong(value);
+				}
+				catch (NumberFormatException e) {
+					throw new IllegalArgumentException("When using multiple-choice filter, a number must be supplied (the related object's ID).", e);
+				}
+
+				// Add to the other criteria a EQUAL criterion between the related object's ID and the specified value.
+				// relatedModel = model.getSingularAttribute(filter.getFieldName()).getDeclaringType();
+				// predicates.add(cb.equal(root.get(relatedModel.getSingularAttribute("id")), id));
+				// pair = findManagedType(root, model, filter.getFieldName() + ".id");
+				// predicates.add(cb.equal(pair.from.get(pair.type.getSingularAttribute("id")), id));
+				criterion = new Criterion(filter.getFieldName() + ".id", CriterionType.EQUALS, id);
+				predicates.add(createPredicate(cb, root, model, criterion));
+				cq.where(predicates.toArray(new Predicate[0]));
+
 				break;
+
+			case LIKE:
+				// Using a simple filter. This query looks like this (without the extra criteria):
+				// from <domain-class> obj where obj.<field-name> LIKE '%<value>%'
+
+				// Add to the other criteria a LIKE criterion for the field name and the specified value.
+				criterion = new Criterion(filter.getFieldName(), CriterionType.LIKE, value);
+				predicates.add(createPredicate(cb, root, model, criterion));
+				cq.where(predicates.toArray(new Predicate[0]));
+				break;
+
+			case BOOLEAN:
+				// Using a boolean filter. This query looks like this (without the extra criteria):
+				// from <domain-class> obj where obj.<field-name> is true/false.
+
+				// Add to the other criteria a is true/false criterion for the field name and the specified value.
+				criterion = new Criterion(filter.getFieldName(), CriterionType.BOOLEAN, value);
+				predicates.add(createPredicate(cb, root, model, criterion));
+				cq.where(predicates.toArray(new Predicate[0]));
+				break;
+
+			default:
+				// Using a simple filter. This query looks like this (without the extra criteria):
+				// from <domain-class> obj where obj.<field-name> = <value>
+
+				// Add to the other criteria a = (equals) criterion for the field name and the specified value.
+				criterion = new Criterion(filter.getFieldName(), CriterionType.EQUALS, value);
+				predicates.add(createPredicate(cb, root, model, criterion));
+				cq.where(predicates.toArray(new Predicate[0]));
 			}
-			sq.where(cb.equal(subDepRoot.get(subDepRoot.getModel().getSingularAttribute("id")), id));
-			sq.select(subDepJoin.get(subDepModel.getSingularAttribute("id")));
-
-			// Builds the query joining together the previous criteria with an IN criterion.
-			pair = findManagedType(root, model, filter.getFieldName() + ".id");
-			predicates.add(cb.in(pair.from.get(pair.type.getSingularAttribute("id"))).value(sq));
-			cq.where(predicates.toArray(new Predicate[0]));
-			break;
-
-		case ENUM_MULTIPLE_CHOICE:
-			// Using an enum multiple-choice filter. This query looks like this (without the extra criteria):
-			// from <domain-class> obj where obj.<field-name> = <enum-value>
-
-			// Obtains the instance of the enumeration to pass as argument given the enumeration name passed as
-			// parameter.
-			Enum<?> enumValue = filter.getEnum(value);
-
-			// Not tested after changed to findManagedType().
-			//
-			// Add to the other criteria a EQUAL criterion between the related object's ID and the specified value.
-			// predicates.add(cb.equal(root.get(model.getSingularAttribute(filter.getFieldName())), enumValue));
-			// pair = findManagedType(root, model, filter.getFieldName());
-			// predicates.add(cb.equal(pair.from.get(pair.type.getSingularAttribute(filter.getFieldName())),
-			// enumValue));
-			criterion = new Criterion(filter.getFieldName(), CriterionType.EQUALS, enumValue);
-			predicates.add(createPredicate(cb, root, model, criterion));
-			cq.where(predicates.toArray(new Predicate[0]));
-
-			break;
-
-		case MULTIPLE_CHOICE:
-			// Not yet tested...
-
-			// Using a multiple-choice filter. This query looks like this (without the extra criteria):
-			// from <domain-class> obj where obj.<field-name>.id = <value-converted-as-id>
-
-			// Check if the ID was correctly supplied.
-			try {
-				id = Long.parseLong(value);
-			}
-			catch (NumberFormatException e) {
-				throw new IllegalArgumentException("When using multiple-choice filter, a number must be supplied (the related object's ID).", e);
-			}
-
-			// Add to the other criteria a EQUAL criterion between the related object's ID and the specified value.
-			// relatedModel = model.getSingularAttribute(filter.getFieldName()).getDeclaringType();
-			// predicates.add(cb.equal(root.get(relatedModel.getSingularAttribute("id")), id));
-			// pair = findManagedType(root, model, filter.getFieldName() + ".id");
-			// predicates.add(cb.equal(pair.from.get(pair.type.getSingularAttribute("id")), id));
-			criterion = new Criterion(filter.getFieldName() + ".id", CriterionType.EQUALS, id);
-			predicates.add(createPredicate(cb, root, model, criterion));
-			cq.where(predicates.toArray(new Predicate[0]));
-
-			break;
-
-		case LIKE:
-			// Using a simple filter. This query looks like this (without the extra criteria):
-			// from <domain-class> obj where obj.<field-name> LIKE '%<value>%'
-
-			// Add to the other criteria a LIKE criterion for the field name and the specified value.
-			criterion = new Criterion(filter.getFieldName(), CriterionType.LIKE, value);
-			predicates.add(createPredicate(cb, root, model, criterion));
-			cq.where(predicates.toArray(new Predicate[0]));
-			break;
-
-		default:
-			// Using a simple filter. This query looks like this (without the extra criteria):
-			// from <domain-class> obj where obj.<field-name> = <value>
-
-			// Add to the other criteria a = (equals) criterion for the field name and the specified value.
-			criterion = new Criterion(filter.getFieldName(), CriterionType.EQUALS, value);
-			predicates.add(createPredicate(cb, root, model, criterion));
-			cq.where(predicates.toArray(new Predicate[0]));
 		}
 	}
 
@@ -583,13 +626,13 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	 * Constructs a predicate using Java EE's Criteria API depending on the type of criterion.
 	 * 
 	 * @param cb
-	 *            The criteria builder.
+	 *          The criteria builder.
 	 * @param path
-	 *            The path object (root, join, etc.).
+	 *          The path object (root, join, etc.).
 	 * @param model
-	 *            The model object (managed type, entity type, etc.).
+	 *          The model object (managed type, entity type, etc.).
 	 * @param criterion
-	 *            The criterion used to build the predicate.
+	 *          The criterion used to build the predicate.
 	 * 
 	 * @return The predicate object that can be used to compose a CriteriaQuery.
 	 * @see javax.persistence.criteria.CriteriaQuery
@@ -612,6 +655,9 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 		case EQUALS:
 			return cb.equal(finalPath, criterion.getParam());
 
+		case BOOLEAN:
+			return (Boolean.valueOf(criterion.getParam().toString())) ? cb.isTrue(finalPath) : cb.isFalse(finalPath);
+
 		case LIKE:
 			return cb.like(cb.lower(finalPath), "%" + criterion.getParam().toString().toLowerCase() + "%");
 		}
@@ -621,17 +667,17 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 	}
 
 	/**
-	 * Finds the final path that has to be compared in the criterion. In case of simple fields (e.g. name, representing
-	 * a String), this is straightforward. In case of fields that require navigation (e.g. address.city.name), this
-	 * method performs the necessary joins and returns the Path object representing the correct property (in the
-	 * example, name) to be compared.
+	 * Finds the final path that has to be compared in the criterion. In case of simple fields (e.g. name, representing a
+	 * String), this is straightforward. In case of fields that require navigation (e.g. address.city.name), this method
+	 * performs the necessary joins and returns the Path object representing the correct property (in the example, name)
+	 * to be compared.
 	 * 
 	 * @param root
-	 *            The From object representing where we should start the navigation.
+	 *          The From object representing where we should start the navigation.
 	 * @param model
-	 *            The metamodel for the starting entity.
+	 *          The metamodel for the starting entity.
 	 * @param fieldName
-	 *            The name of the field.
+	 *          The name of the field.
 	 * 
 	 * @return The Path object representing the property that should be compared.
 	 */
@@ -651,30 +697,30 @@ public abstract class BaseJPADAO<T extends PersistentObject> implements BaseDAO<
 
 		/*
 		 * Path finalPath = null; // Navigate through the entities using the dots. Joins have to be performed in case of
-		 * navigation. int idx = fieldName.indexOf('.'); ManagedType entityType = model; From from = root; while
-		 * (finalPath == null) { // No more dots, so obtain the singular attribute and the path. if (idx == -1)
-		 * finalPath = from.get(entityType.getSingularAttribute(fieldName)); // There are dots. Obtains the first
-		 * element and iterates to follow the chain. else { String firstField = fieldName.substring(0, idx);
-		 * SingularAttribute attr = entityType.getSingularAttribute(firstField); // Element must be an entity in order
-		 * to be navigable. Type type = attr.getType(); if (type.getPersistenceType() != Type.PersistenceType.ENTITY)
-		 * throw new IllegalStateException("Cannot navigate the field \"" + firstField +
+		 * navigation. int idx = fieldName.indexOf('.'); ManagedType entityType = model; From from = root; while (finalPath
+		 * == null) { // No more dots, so obtain the singular attribute and the path. if (idx == -1) finalPath =
+		 * from.get(entityType.getSingularAttribute(fieldName)); // There are dots. Obtains the first element and iterates
+		 * to follow the chain. else { String firstField = fieldName.substring(0, idx); SingularAttribute attr =
+		 * entityType.getSingularAttribute(firstField); // Element must be an entity in order to be navigable. Type type =
+		 * attr.getType(); if (type.getPersistenceType() != Type.PersistenceType.ENTITY) throw new
+		 * IllegalStateException("Cannot navigate the field \"" + firstField +
 		 * "\" because it doesn't represent an entity."); // Sets the entity type, the join and removes the first entity
-		 * from the field name for the next iteration. from = from.join(attr); entityType = (EntityType)type; fieldName
-		 * = fieldName.substring(idx + 1); idx = fieldName.indexOf('.'); } } // Returns the final path once there was no
-		 * more navigation required. return finalPath;
+		 * from the field name for the next iteration. from = from.join(attr); entityType = (EntityType)type; fieldName =
+		 * fieldName.substring(idx + 1); idx = fieldName.indexOf('.'); } } // Returns the final path once there was no more
+		 * navigation required. return finalPath;
 		 */
 	}
 
 	/**
-	 * Finds the Criteria API's managed type for a query, given the string that would specify the field name if the
-	 * query were in JPQL.
+	 * Finds the Criteria API's managed type for a query, given the string that would specify the field name if the query
+	 * were in JPQL.
 	 * 
 	 * @param root
-	 *            The root of the criteria query.
+	 *          The root of the criteria query.
 	 * @param model
-	 *            The entity model of the root of the query (the DAO's managed class).
+	 *          The entity model of the root of the query (the DAO's managed class).
 	 * @param fieldName
-	 *            The JPQL-formatted name of the field, something like: product.promotion.endDate.
+	 *          The JPQL-formatted name of the field, something like: product.promotion.endDate.
 	 * 
 	 * @return An instance of the internal class TypeFrom, which contains a ManagedType and a From instance.
 	 */

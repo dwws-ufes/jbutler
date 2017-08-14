@@ -18,6 +18,9 @@ public enum CriterionType {
 	/** "field-name = value" criterion. */
 	EQUALS,
 
+	/** "field-name is true/false" criterion. */
+	BOOLEAN,
+
 	/** "field-name like '%value%'" criterion. */
 	LIKE;
 }

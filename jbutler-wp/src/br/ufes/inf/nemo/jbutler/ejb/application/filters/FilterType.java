@@ -12,6 +12,9 @@ public enum FilterType {
 	/** @see br.ufes.inf.nemo.jbutler.ejb.application.filters.SimpleFilter */
 	SIMPLE,
 
+	/** @see br.ufes.inf.nemo.jbutler.ejb.application.filters.BooleanFilter */
+	BOOLEAN,
+
 	/** @see br.ufes.inf.nemo.jbutler.ejb.application.filters.LikeFilter */
 	LIKE,
 
