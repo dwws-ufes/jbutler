@@ -84,7 +84,7 @@ public abstract class JSFController implements Serializable {
 	 * 
 	 * @return The FacesContext object associated with the current request.
 	 */
-	protected FacesContext getCurrentInstance() {
+	protected FacesContext getFacesContext() {
 		return FacesContext.getCurrentInstance();
 	}
 
@@ -94,7 +94,7 @@ public abstract class JSFController implements Serializable {
 	 * @return The ExternalContext object associated with the current request.
 	 */
 	protected ExternalContext getExternalContext() {
-		return getCurrentInstance().getExternalContext();
+		return getFacesContext().getExternalContext();
 	}
 
 	/**
@@ -103,7 +103,7 @@ public abstract class JSFController implements Serializable {
 	 * @return The ELContext object associated with the current request.
 	 */
 	protected ELContext getELContext() {
-		return getCurrentInstance().getELContext();
+		return getFacesContext().getELContext();
 	}
 
 	/**
@@ -121,7 +121,7 @@ public abstract class JSFController implements Serializable {
 	 * @return The Application object associated with the current request.
 	 */
 	protected Application getApplication() {
-		return getCurrentInstance().getApplication();
+		return getFacesContext().getApplication();
 	}
 
 	/**
