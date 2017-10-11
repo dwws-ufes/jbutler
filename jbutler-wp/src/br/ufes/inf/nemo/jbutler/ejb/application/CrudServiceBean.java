@@ -18,7 +18,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
  * This abstract class provides empty implementations for validate methods to make them optional for the bean developer.
  * One very important such method is
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
  *            Persistent class that is managed by the service.

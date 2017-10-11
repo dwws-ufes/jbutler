@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * collection of error messages that are to be displayed to the user by the controller. Also implements iterator,
  * iterating through the error messages.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
  * @version 1.1

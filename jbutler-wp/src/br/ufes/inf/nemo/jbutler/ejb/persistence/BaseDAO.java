@@ -17,7 +17,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.exceptions.PersistentObjectNotFo
  * <a href= "http://java.sun.com/blueprints/corej2eepatterns/Patterns/DataAccessObject.html" target="_blank">http://java
  * .sun.com/blueprints/corej2eepatterns/Patterns/ DataAccessObject.html</a>.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
  *          Persistent class that is managed by the DAO.

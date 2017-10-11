@@ -21,7 +21,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
  * which is specified as a generic parameter, along with the class of its ID. It provides basic functionality for
  * listing peristent objects.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
  *            Entity manipulated by the listing use case.

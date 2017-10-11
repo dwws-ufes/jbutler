@@ -11,7 +11,7 @@ import java.util.Map;
  * entities that have the given fieldName's id equal the search param, which must also be an id. E.g.: searching a
  * product selecting the category of the product (CD, Book, DVD, etc.).
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
  *            Type of the objects that compose the list of options to choose from.

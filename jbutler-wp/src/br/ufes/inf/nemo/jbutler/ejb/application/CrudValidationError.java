@@ -7,7 +7,7 @@ import java.io.Serializable;
  * retrieving the error message in the resource bundles and parameters to be inserted in the message. It can also
  * provide a field name, so the controller attaches the message to a specific field of the form.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
  * @version 1.1

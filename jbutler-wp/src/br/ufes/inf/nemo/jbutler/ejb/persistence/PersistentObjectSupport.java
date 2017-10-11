@@ -13,7 +13,7 @@ import br.ufes.inf.nemo.jbutler.ejb.domain.DomainObjectSupport;
  * Standard implementation for persistent objects, implementing EJB 3's standard annotations for persistence. This
  * implementation extends on the DomainObjectSupport implementation to provide equals() and hashCode() based on UUIDs.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @see br.ufes.inf.nemo.jbutler.ejb.domain.DomainObjectSupport
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)

@@ -16,7 +16,7 @@ import java.util.List;
  * that have "christmas" in their name. Furthermore, with joinedCriteria you can filter out offers that haven't yet
  * started or have already ended, for example.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
  * @version 1.1

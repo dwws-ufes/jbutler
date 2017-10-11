@@ -16,7 +16,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
  * This class converts the entity to its (Long) id and vice-versa and it's useful for "select one/many" components like
  * radio buttons, menus, lists, etc.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
  *            Persistent class to/from which the conversion happens.

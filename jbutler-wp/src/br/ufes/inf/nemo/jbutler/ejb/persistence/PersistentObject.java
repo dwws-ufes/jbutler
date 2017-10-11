@@ -19,7 +19,7 @@ import br.ufes.inf.nemo.jbutler.ejb.domain.DomainObject;
  * A standard implementation is provided by PersistentObjectSupport, implementing EJB 3's standard annotations for
  * persistence.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
  * @version 1.1

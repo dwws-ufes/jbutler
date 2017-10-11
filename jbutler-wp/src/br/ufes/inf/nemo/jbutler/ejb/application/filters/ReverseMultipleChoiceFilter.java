@@ -11,7 +11,7 @@ import java.util.Map;
  * property fieldName is set with the name of the field in the CRUD entity ("city"), options is filled with the
  * different choices (the region objects) and subFieldName is set with the field to get in the subquery ("cities").
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
  *            Type of the objects that compose the list of options to choose from.

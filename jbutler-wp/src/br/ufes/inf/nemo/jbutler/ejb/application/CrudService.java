@@ -18,7 +18,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
  * CRUD framework that integrates with Java EE 6 and makes the task of implementing CRUD use cases easier. It also
  * provides a default implementation, CrudService.
  * 
- * <i>This class is part of the Engenho de Software CRUD framework for EJB3 (Java EE 6).</i>
+ * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
  *            Persistent class that is managed by the service.
