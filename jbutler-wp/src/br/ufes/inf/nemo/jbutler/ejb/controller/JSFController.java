@@ -135,9 +135,9 @@ public abstract class JSFController implements Serializable {
 
 	/**
 	 * Informs to other methods what is the name of the variable that represents the resource bundle with i18n messages.
-	 * This method may be overridden by subclasses if they don't follow the standard naming convention for Crud
-	 * Controllers, which is: <code>com.yourdomain.yoursystem.package.controller.ManageObjectController</code> which
-	 * would lead to a bundle variable name of <code>msgsPackage</code>.
+	 * This method may be overridden by subclasses if they don't follow the standard naming convention for CRUD
+	 * Controllers, which is: <code>com.yourdomain.yoursystem.subsystem.controller.ManageObjectsController</code> which
+	 * would lead to a bundle variable name of <code>msgsSubsystem</code>.
 	 * 
 	 * @return The name of the resource bundle variable.
 	 */
@@ -149,7 +149,7 @@ public abstract class JSFController implements Serializable {
 			String pkg = "";
 			String classFullName = getClass().getCanonicalName();
 
-			// Searches for the name of the package according to the name convention (before ".controller.").
+			// Searches for the name of the subsystem according to the name convention (before ".controller.").
 			idx = classFullName.indexOf(".controller.");
 			if (idx != -1) {
 				pkg = classFullName.substring(0, idx);
@@ -160,7 +160,7 @@ public abstract class JSFController implements Serializable {
 			// Adds the "msgs" prefix and capitalizes the first letter.
 			if (pkg.length() > 1) pkg = "msgs" + Character.toUpperCase(pkg.charAt(0)) + pkg.substring(1);
 
-			// The bundle name is the result of the manipulation of the class' package.
+			// The bundle name is the result of the manipulation of the class' subsystem.
 			bundleName = pkg;
 			logger.log(Level.INFO, "Bundle name not provided by subclass, thus guessing from naming convention: {0}", bundleName);
 		}
@@ -169,9 +169,9 @@ public abstract class JSFController implements Serializable {
 
 	/**
 	 * Informs to other methods what is the default prefix for resource bundle messages for this controller. This method
-	 * may be overridden by subclasses if they don't follow the standard naming convention for Crud Controllers, which
-	 * is: <code>com.yourdomain.yoursystem.package-name.controller.ManageObjectController</code> which would lead to a
-	 * prefix of <code>manageObject</code>.
+	 * may be overridden by subclasses if they don't follow the standard naming convention for CRUD Controllers, which
+	 * is: <code>com.yourdomain.yoursystem.subsystem.controller.ManageObjectsController</code> which would lead to a
+	 * prefix of <code>manageObjects</code>.
 	 * 
 	 * @return The prefix for resource bundle keys.
 	 */

@@ -251,9 +251,9 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 
 	/**
 	 * Informs to other methods what is the view path where the web pages are to be located. This method may be
-	 * overridden by subclasses if they don't follow the standard naming convention for Crud Controllers, which is:
-	 * <code>com.yourdomain.yoursystem.package.controller.ManageObjectController</code> which would lead to a view path
-	 * of <code>/package/manageObject/</code>.
+	 * overridden by subclasses if they don't follow the standard naming convention for CRUD Controllers, which is:
+	 * <code>com.yourdomain.yoursystem.subsystem.controller.ManageObjectsController</code> which would lead to a view path
+	 * of <code>/subsystem/manageObjects/</code>.
 	 * 
 	 * @return The view path string.
 	 */
@@ -265,7 +265,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 			String pkg = "", service = "";
 			String classFullName = getClass().getCanonicalName();
 
-			// Searches for the name of the package according to the name convention (before ".controller.").
+			// Searches for the name of the subsystem according to the name convention (before ".controller.").
 			idx = classFullName.indexOf(".controller.");
 			if (idx != -1) {
 				pkg = classFullName.substring(0, idx);
@@ -281,7 +281,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 			if (idx != -1) service = service.substring(0, idx);
 			if (service.length() > 1) service = Character.toLowerCase(service.charAt(0)) + service.substring(1);
 
-			// Builds the view path with the name of the package and class.
+			// Builds the view path with the name of the subsystem and class.
 			viewPath = pkg + "/" + service + "/";
 			logger.log(Level.INFO, "View path not provided by subclass, thus guessing from naming convention: {0}", viewPath);
 		}
