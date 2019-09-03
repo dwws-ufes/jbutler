@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:adm="http://github.com/adminfaces"
+    template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+		<h:outputText value="#{msgsCore['manageWorkshops.title.create']}"
+			rendered="#{(! manageWorkshopsController.readOnly) and (manageWorkshopsController.selectedEntity.id == null)}" />
+		<h:outputText value="#{msgsCore['manageWorkshops.title.update']}"
+			rendered="#{(! manageWorkshopsController.readOnly) and (manageWorkshopsController.selectedEntity.id != null)}" />
+		<h:outputText value="#{msgsCore['manageWorkshops.title.retrieve']}" rendered="#{manageWorkshopsController.readOnly}" />
+    </ui:define>
+
+    <ui:define name="description">
+		<h:outputText value="#{msgsCore['manageWorkshops.title.create.description']}"
+			rendered="#{(! manageWorkshopsController.readOnly) and (manageWorkshopsController.selectedEntity.id == null)}" />
+		<h:outputText value="#{msgsCore['manageWorkshops.title.update.description']}"
+			rendered="#{(! manageWorkshopsController.readOnly) and (manageWorkshopsController.selectedEntity.id != null)}" />
+		<h:outputText value="#{msgsCore['manageWorkshops.title.retrieve.description']}" rendered="#{manageWorkshopsController.readOnly}" />
+    </ui:define>
+
+    <ui:define name="body">
+		<h:form id="entitiesForm">
+			<p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+				<p:outputLabel for="yearField" value="#{msgsCore['manageWorkshops.field.year']}" />
+				<p:inputText id="yearField" value="#{manageWorkshopsController.selectedEntity.year}" style="width: 100%;" />
+				<p:outputLabel for="nameField" value="#{msgsCore['manageWorkshops.field.name']} " />
+				<p:inputText id="nameField" value="#{manageWorkshopsController.selectedEntity.name}" style="width: 100%;" />
+				<p:outputLabel for="acronymField" value="#{msgsCore['manageWorkshops.field.acronym']}" />
+				<p:inputText id="acronymField" value="#{manageWorkshopsController.selectedEntity.acronym}" style="width: 100%;" />
+				<p:outputLabel for="submissionDeadlineField" value="#{msgsCore['manageWorkshops.field.submissionDeadline']}" />
+				<p:calendar id="submissionDeadlineField" value="#{manageWorkshopsController.selectedEntity.submissionDeadline}" showOn="button"
+					pattern="dd/MM/yyyy" mask="true" style="width: 100%;" />
+				<p:outputLabel for="reviewDeadlineField" value="#{msgsCore['manageWorkshops.field.reviewDeadline']}" />
+				<p:calendar id="reviewDeadlineField" value="#{manageWorkshopsController.selectedEntity.reviewDeadline}" showOn="button" pattern="dd/MM/yyyy"
+					mask="true" style="width: 100%;" />
+			</p:panelGrid>
+			<p:commandButton id="cancelButton" value="#{msgs['jbutler.crud.button.cancel']}" icon="fa fa-close"
+				action="#{manageWorkshopsController.list}" immediate="true" rendered="#{! manageWorkshopsController.readOnly}" />
+			<p:commandButton id="saveButton" value="#{msgs['jbutler.crud.button.save']}" icon="fa fa-save" action="#{manageWorkshopsController.save}"
+				rendered="#{! manageWorkshopsController.readOnly}" />
+			<p:defaultCommand target="saveButton" />
+			<p:commandButton id="backButton" value="#{msgs['jbutler.crud.button.back']}" icon="fa fa-arrow-circle-left"
+				action="#{manageWorkshopsController.list}" immediate="true" rendered="#{manageWorkshopsController.readOnly}" />
+		</h:form>
+    </ui:define>
+</ui:composition>
