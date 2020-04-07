@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -24,7 +25,7 @@ import br.ufes.inf.nemo.jbutler.ejb.persistence.PersistentObject;
  * <i>This class is part of the JButler CRUD framework for EJB3 (Java EE 6).</i>
  * 
  * @param <T>
- *            Entity manipulated by the listing use case.
+ *          Entity manipulated by the listing use case.
  * 
  * @author Vitor E. Silva Souza (vitorsouza@gmail.com)
  * @version 1.1
@@ -37,6 +38,9 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 
 	/** The logger. */
 	private static final Logger logger = Logger.getLogger(ListingController.class.getCanonicalName());
+
+	/** The default name of the listing page. */
+	private static final String DEFAULT_LISTING_PAGE_NAME = "index.xhtml";
 
 	/** The view path where the web pages are located. */
 	protected String viewPath;
@@ -152,7 +156,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	 * Setter for filterKey.
 	 * 
 	 * @param filterKey
-	 *            The selected filter's ID.
+	 *          The selected filter's ID.
 	 */
 	public void setFilterKey(String filterKey) {
 		this.filterKey = filterKey;
@@ -171,7 +175,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	 * Setter for filterParam.
 	 * 
 	 * @param filterParam
-	 *            The filter parameter.
+	 *          The filter parameter.
 	 */
 	public void setFilterParam(String filterParam) {
 		this.filterParam = filterParam;
@@ -209,11 +213,11 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 				private static final long serialVersionUID = 1117380513193004406L;
 
 				/**
-				 * @see org.primefaces.model.LazyDataModel#load(int, int, java.lang.String,
-				 *      org.primefaces.model.SortOrder, java.util.Map)
+				 * @see org.primefaces.model.LazyDataModel#load(int, int, java.lang.String, org.primefaces.model.SortOrder,
+				 *      java.util.Map)
 				 */
 				@Override
-				public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+				public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filters) {
 					firstEntityIndex = first;
 					lastEntityIndex = first + pageSize;
 					retrieveEntities();
@@ -242,7 +246,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	 * Setter for selectedEntity.
 	 * 
 	 * @param selectedEntity
-	 *            The selected entity among the list of existing entities.
+	 *          The selected entity among the list of existing entities.
 	 */
 	public void setSelectedEntity(T selectedEntity) {
 		this.selectedEntity = selectedEntity;
@@ -250,8 +254,8 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	}
 
 	/**
-	 * Informs to other methods what is the view path where the web pages are to be located. This method may be
-	 * overridden by subclasses if they don't follow the standard naming convention for CRUD Controllers, which is:
+	 * Informs to other methods what is the view path where the web pages are to be located. This method may be overridden
+	 * by subclasses if they don't follow the standard naming convention for CRUD Controllers, which is:
 	 * <code>com.yourdomain.yoursystem.subsystem.controller.ManageObjectsController</code> which would lead to a view path
 	 * of <code>/subsystem/manageObjects/</code>.
 	 * 
@@ -289,6 +293,16 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	}
 
 	/**
+	 * Informs to other methods what is the name of the page that shows the entity listing. This method may be overridden
+	 * by subclasses if they don't follow the standard naming convention for CRUD Controllers, which is: index.xhtml.
+	 * 
+	 * @return The listing page name.
+	 */
+	public String getListingPageName() {
+		return DEFAULT_LISTING_PAGE_NAME;
+	}
+
+	/**
 	 * Provides the listing service class to other methods that need it. This method must be overridden by subclasses,
 	 * each one providing its specific listing service.
 	 * 
@@ -297,8 +311,8 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	protected abstract ListingService<T> getListingService();
 
 	/**
-	 * Initializes the collection of filters that indicate to the view what kind of filtering can be done with the list
-	 * of entities.
+	 * Initializes the collection of filters that indicate to the view what kind of filtering can be done with the list of
+	 * entities.
 	 */
 	protected abstract void initFilters();
 
@@ -306,7 +320,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	 * Adds a filter to this controller.
 	 * 
 	 * @param filter
-	 *            The filter object representing a kind of filtering.
+	 *          The filter object representing a kind of filtering.
 	 */
 	protected void addFilter(Filter<?> filter) {
 		logger.log(Level.INFO, "Adding filter: {0} ({1})", new Object[] { filter.getKey(), filter.getType() });
@@ -338,8 +352,8 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 	}
 
 	/**
-	 * Retrieves a collection of entities, respecting the selected range. Makes the collection available to the view.
-	 * This method is intended to be used internally.
+	 * Retrieves a collection of entities, respecting the selected range. Makes the collection available to the view. This
+	 * method is intended to be used internally.
 	 */
 	protected void retrieveEntities() {
 		// Checks if the last entity index is over the number of entities and correct it.
@@ -510,7 +524,7 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 		// After canceling a search, always go to the first page of entities.
 		goFirst();
 	}
-	
+
 	/**
 	 * Stops filtering and clears the filter parameter.
 	 * 
@@ -550,6 +564,6 @@ public abstract class ListingController<T extends PersistentObject> extends JSFC
 		else retrieveEntities();
 
 		// Goes to the listing.
-		return getViewPath() + "list.xhtml?faces-redirect=" + getFacesRedirect();
+		return getViewPath() + getListingPageName() + "?faces-redirect=" + getFacesRedirect();
 	}
 }

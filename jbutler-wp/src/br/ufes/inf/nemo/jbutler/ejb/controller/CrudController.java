@@ -40,6 +40,9 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	/** The logger. */
 	private static final Logger logger = Logger.getLogger(CrudController.class.getCanonicalName());
 
+	/** The default name of the form page. */
+	private static final String DEFAULT_FORM_PAGE_NAME = "form.xhtml";
+
 	/** Output: if the data is read-only. */
 	protected boolean readOnly = false;
 
@@ -83,6 +86,16 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 	 */
 	protected String getFieldName(String propertyName) {
 		return "form:" + propertyName;
+	}
+	
+	/**
+	 * Informs to other methods what is the name of the page that shows the entity form. This method may be overridden
+	 * by subclasses if they don't follow the standard naming convention for CRUD Controllers, which is: form.xhtml.
+	 * 
+	 * @return The listing page name.
+	 */
+	public String getFormPageName() {
+		return DEFAULT_FORM_PAGE_NAME;
 	}
 
 	/**
@@ -213,7 +226,7 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 		selectedEntity = createNewEntity();
 
 		// Goes to the form.
-		return getViewPath() + "form.xhtml?faces-redirect=" + getFacesRedirect();
+		return getViewPath() + getFormPageName() + "?faces-redirect=" + getFacesRedirect();
 	}
 
 	/**
@@ -249,7 +262,7 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 		}
 
 		// Goes to the form.
-		return getViewPath() + "form.xhtml?faces-redirect=" + getFacesRedirect();
+		return getViewPath() + getFormPageName() + "?faces-redirect=" + getFacesRedirect();
 	}
 
 	/**
@@ -285,7 +298,7 @@ public abstract class CrudController<T extends PersistentObject> extends Listing
 		}
 
 		// Goes to the form.
-		return getViewPath() + "form.xhtml?faces-redirect=" + getFacesRedirect();
+		return getViewPath() + getFormPageName() + "?faces-redirect=" + getFacesRedirect();
 	}
 
 	/**
