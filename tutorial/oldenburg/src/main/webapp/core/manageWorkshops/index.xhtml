@@ -7,15 +7,15 @@
     xmlns:adm="http://github.com/adminfaces"
     template="/WEB-INF/templates/template.xhtml">
 
-    <ui:define name="title">
-        <h:outputText value="#{msgsCore['manageWorkshops.title']}" />
-    </ui:define>
+	<ui:define name="title">
+		<h:outputText value="#{msgsCore['manageWorkshops.title']}" />
+	</ui:define>
 
-    <ui:define name="description">
-        <h:outputText value="#{msgsCore['manageWorkshops.title.description']}" />
-    </ui:define>
+	<ui:define name="description">
+		<h:outputText value="#{msgsCore['manageWorkshops.title.description']}" />
+	</ui:define>
 
-    <ui:define name="body">
+	<ui:define name="body">
 		<adm:breadcrumb link="/core/manageWorkshops/index" title="#{msgsCore['manageWorkshops.title']}" />
 		<h:form id="listingForm">
 			<p:dataTable id="entitiesDataTable" var="entity" value="#{manageWorkshopsController.lazyEntities}"
@@ -78,5 +78,5 @@
 				</p:panel>
 			</h:panelGroup>
 		</h:form>
-    </ui:define>
+	</ui:define>
 </ui:composition>

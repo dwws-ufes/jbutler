@@ -18,5 +18,4 @@ public class WorkshopJPADAO extends BaseJPADAO<Workshop> implements WorkshopDAO 
 	protected EntityManager getEntityManager() {
 		return entityManager;
 	}
-
 }

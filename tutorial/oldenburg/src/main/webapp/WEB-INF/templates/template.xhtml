@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui" template="/admin.xhtml">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui" template="/admin.xhtml">
 
-	<ui:define name="head">
-		<title>Oldenburg Workshop Simulator</title>
-	</ui:define>
+    <ui:define name="head">
+        <title>Oldenburg Workshop Simulator</title>
+    </ui:define>
 
-	<ui:define name="logo-lg">
-            Oldenburg
-        </ui:define>
+    <ui:define name="logo-lg">
+        Oldenburg
+    </ui:define>
 
-	<ui:define name="logo-mini">
-            OWS
-        </ui:define>
+    <ui:define name="logo-mini">
+        OWS
+    </ui:define>
 
-	<ui:define name="menu">
-		<ul class="sidebar-menu">
-			<li><p:link outcome="/index" onclick="clearBreadCrumbs()">
-					<i class="fa fa-home"></i>
-					<span><h:outputText value="#{msgs['menu.home']}" /></span>
-				</p:link></li>
-			<li class="header"><h:outputText value="#{msgsCore['core.menu.admin']}" /></li>
-			<li><p:link outcome="/core/manageWorkshops/index" onclick="clearBreadCrumbs()">
-				<i class="fa fa-calendar"></i>
-				<span><h:outputText value="#{msgsCore['core.menu.admin.manageWorkshops']}" /></span>
-			</p:link></li>
-		</ul>
-	</ui:define>
+    <ui:define name="menu">
+        <ul class="sidebar-menu">
+            <li><p:link outcome="/index" onclick="clearBreadCrumbs()">
+                    <i class="fa fa-home"></i>
+                    <span><h:outputText value="#{msgs['menu.home']}" /></span>
+                </p:link></li>
+				<li class="header"><h:outputText value="#{msgsCore['core.menu.admin']}" /></li>
+				<li><p:link outcome="/core/manageWorkshops/index" onclick="clearBreadCrumbs()">
+						<i class="fa fa-calendar"></i>
+						<span><h:outputText value="#{msgsCore['core.menu.admin.manageWorkshops']}" /></span>
+					</p:link></li>
+        </ul>
+    </ui:define>
 
-	<ui:define name="top-menu">
+    <ui:define name="top-menu">
 
-	</ui:define>
+    </ui:define>
 
 	<ui:define name="footer">
         <h:outputText value="#{msgs['text.developedBy']}" escape="false" />

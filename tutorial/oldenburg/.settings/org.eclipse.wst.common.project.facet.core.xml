@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faceted-project>
-  <runtime name="WildFly 17.0 Runtime"/>
   <fixed facet="wst.jsdt.web"/>
   <installed facet="jst.web" version="4.0"/>
   <installed facet="wst.jsdt.web" version="1.0"/>
-  <installed facet="java" version="11"/>
-  <installed facet="jst.jaxrs" version="2.1"/>
-  <installed facet="jst.jsf" version="2.3"/>
+  <installed facet="java" version="13"/>
   <installed facet="jst.cdi" version="2.0"/>
+  <installed facet="jst.jsf" version="2.3"/>
   <installed facet="jboss.m2" version="1.0"/>
-  <installed facet="jpt.jpa" version="2.1"/>
+  <installed facet="jpt.jpa" version="2.2"/>
 </faceted-project>

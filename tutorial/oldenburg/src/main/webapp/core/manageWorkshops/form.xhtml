@@ -7,23 +7,23 @@
     xmlns:adm="http://github.com/adminfaces"
     template="/WEB-INF/templates/template.xhtml">
 
-    <ui:define name="title">
+	<ui:define name="title">
 		<h:outputText value="#{msgsCore['manageWorkshops.title.create']}"
 			rendered="#{(! manageWorkshopsController.readOnly) and (manageWorkshopsController.selectedEntity.id == null)}" />
 		<h:outputText value="#{msgsCore['manageWorkshops.title.update']}"
 			rendered="#{(! manageWorkshopsController.readOnly) and (manageWorkshopsController.selectedEntity.id != null)}" />
 		<h:outputText value="#{msgsCore['manageWorkshops.title.retrieve']}" rendered="#{manageWorkshopsController.readOnly}" />
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="description">
+	<ui:define name="description">
 		<h:outputText value="#{msgsCore['manageWorkshops.title.create.description']}"
 			rendered="#{(! manageWorkshopsController.readOnly) and (manageWorkshopsController.selectedEntity.id == null)}" />
 		<h:outputText value="#{msgsCore['manageWorkshops.title.update.description']}"
 			rendered="#{(! manageWorkshopsController.readOnly) and (manageWorkshopsController.selectedEntity.id != null)}" />
 		<h:outputText value="#{msgsCore['manageWorkshops.title.retrieve.description']}" rendered="#{manageWorkshopsController.readOnly}" />
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="body">
+	<ui:define name="body">
 		<h:form id="entitiesForm">
 			<p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
 				<p:outputLabel for="yearField" value="#{msgsCore['manageWorkshops.field.year']}" />
@@ -47,5 +47,5 @@
 			<p:commandButton id="backButton" value="#{msgs['jbutler.crud.button.back']}" icon="fa fa-arrow-circle-left"
 				action="#{manageWorkshopsController.list}" immediate="true" rendered="#{manageWorkshopsController.readOnly}" />
 		</h:form>
-    </ui:define>
+	</ui:define>
 </ui:composition>
