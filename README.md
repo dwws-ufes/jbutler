@@ -1,3 +1,7 @@
+# JButler has moved!
+
+The new version of JButler is now [hosted at Labes/UFES](https://gitlab.labes.inf.ufes.br/labes/jbutler). This repository contains an older version, if you're interested.
+
 # EJB Utils -> EJBUtils -> JButils -> JButler
 
 This repository is composed of projects that contain utility classes and small frameworks that might be useful for projects that use the standard Java EE stack of frameworks (JSF, CDI, JPA, EJB), plus [PrimeFaces](http://www.primefaces.org).
